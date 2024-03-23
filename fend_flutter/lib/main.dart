@@ -1,3 +1,4 @@
+import 'package:fend_flutter/screens/game_tasks.dart';
 import 'package:fend_flutter/screens/tasks_overview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

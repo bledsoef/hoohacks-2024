@@ -3,7 +3,6 @@ import 'package:fend_flutter/models/task.dart';
 const kTitle = "APP NAME";
 
 const codTasks = [
-  Task(id: 'c2', details: 'Run 40 miles', reward: '45 credit points', networkImage: 'networkImage'),
   Task(
     id: 'c1',
     details: 'Run 50 miles',

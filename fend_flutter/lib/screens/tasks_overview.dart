@@ -1,4 +1,5 @@
 import 'package:fend_flutter/data/dummy_data.dart';
+import 'package:fend_flutter/screens/game_tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -50,7 +51,9 @@ class _TasksOverviewState extends State<TasksOverview> {
                   ),
                   const Spacer(),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => GameTasksScreen(task: "Call of Duty")));
+                      },
                       child: Text(
                         "View all",
                         style: TextStyle(color: Colors.pink[300]),
@@ -215,7 +218,9 @@ class _TasksOverviewState extends State<TasksOverview> {
                   ),
                   const Spacer(),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        // Navigator.push(context, MaterialPageRoute(builder: ((context) => GameTasksScreen(index: ,))));
+                      },
                       child: Text(
                         "View all",
                         style: TextStyle(color: Colors.pink[300]),
