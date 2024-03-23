@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from database.connection import get_db
+from app.models.models import Task, User
 router = APIRouter()
 
 @router.post("/createTask")
@@ -16,7 +17,12 @@ async def createTask(request: Request, db: Session = Depends(get_db)):
 @router.get("/getTasksForUser")
 async def getSentRecsForUser(username: str, db: Session = Depends(get_db)):
     try:        
-        return "tasks go here"
+        requestingUser = db.query(User).filter(User.username==username).first()
+        assert requestingUser is not None
+
+        tasksForUser = [task.__dict__ for task in db.query(Task).filter(Task.user == username).all()]
+        print(tasksForUser)
+        return tasksForUser
     except Exception as e:
         print(e)
         return {"message": "Failed to get recs"}
