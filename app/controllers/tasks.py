@@ -3,6 +3,15 @@ from sqlalchemy.orm import Session
 from database.connection import get_db
 from app.logic.tasks import create_new_task
 from app.models.models import Task, User
+import datetime
+import requests
+import os
+from pathlib import Path
+import dotenv
+
+env_path = Path('.') / '.env'
+dotenv.load_dotenv()
+
 router = APIRouter()
 
 @router.post("/createTask")
@@ -26,3 +35,13 @@ async def getSentRecsForUser(username: str, db: Session = Depends(get_db)):
     except Exception as e:
         print(e)
         return {"message": "Failed to get recs"}
+    
+
+@router.get("/getSteps")
+async def getSteps():
+    header = {'Authorization': 'Bearer {}'.format(os.environ["ACCESS_TOKEN"])}
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    response = requests.get(f"https://api.fitbit.com/1/user/-/activities/date/{date}.json", headers=header).json()
+    return response["summary"]["steps"]
+
+
