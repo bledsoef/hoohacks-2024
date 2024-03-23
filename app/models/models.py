@@ -19,6 +19,9 @@ class Task(Base):
     user = Column(String(50), ForeignKey("users.username"))
     status = Column(String(50), nullable=False)
     dateCompleted = Column(Date, nullable=True)
+    category = Column(String(50), nullable=False)
+    quantity = Column(Integer, nullable=True)
+    metric = Column(String(50), nullable=True)
     taskDescription = Column(String(100), nullable=False)
     rewardDescription = Column(String(100), nullable=False)
 
