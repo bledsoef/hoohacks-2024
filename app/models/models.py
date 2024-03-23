@@ -17,8 +17,10 @@ class Task(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     user = Column(String(50), ForeignKey("users.username"))
+    title = Column(String(50))
     status = Column(String(50), nullable=False)
     dateCompleted = Column(Date, nullable=True)
+    expirationDate = Column(Date)
     category = Column(String(50), nullable=False)
     quantity = Column(Integer, nullable=True)
     metric = Column(String(50), nullable=True)
