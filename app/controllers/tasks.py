@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from database.connection import get_db
 from app.logic.tasks import create_new_task
 from app.models.models import Task, User
-from sqlalchemy.inspection import inspect
 from typing import Union
 router = APIRouter()
 
