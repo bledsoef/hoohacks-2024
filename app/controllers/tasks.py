@@ -36,12 +36,41 @@ async def getSentRecsForUser(username: str = None, db: Session = Depends(get_db)
         print(e)
         return {"message": "Failed to get recs"}    
 
-@router.get("/getSteps")
+@router.get("/getDailyFitbitInformation")
 async def getSteps():
     header = {'Authorization': 'Bearer {}'.format(os.environ["ACCESS_TOKEN"])}
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    response = requests.get(f"https://api.fitbit.com/1/user/-/activities/date/{date}.json", headers=header).json()
-    return response["summary"]["steps"]
+    activity_response = requests.get(f"https://api.fitbit.com/1/user/-/activities/date/{date}.json", headers=header).json()
+    sleep_response = requests.get(f"https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json", headers=header).json()
+    summary = activity_response.get("summary", None)
+    steps = 0
+    kilometers = 0
+    minutesExercising = 0
+    if summary:
+        steps = summary.get("steps", 0)
+        distances = summary.get("distances", [])
+        if distances:
+            total = distances[0]
+            kilometers = total.get("distance", 0)
+        fairlyActiveMinutes = summary.get("fairlyActiveMinutes", 0)
+        veryActiveMinutes = summary.get("veryActiveMinutes", 0)
+        minutesExercising = fairlyActiveMinutes + veryActiveMinutes
+    sleep = sleep_response.get("sleep", [])
+    efficiency = 0
+    if sleep:
+        sleep_info = sleep[0]
+        efficiency = sleep_info.get("efficiency", 0)
+    sleep_summary = sleep_response.get("summary", None)
+    hoursAsleep = 0
+    if sleep_summary:
+        hoursAsleep = sleep_summary.get("totalMinutesAsleep", 0) / 60
+    return {
+        "steps": steps, 
+        "kilometers": kilometers, 
+        "minutesExercising": minutesExercising,
+        "sleepEfficiency": efficiency,
+        "hoursAsleep": hoursAsleep
+        }
 
 @router.post("/updateTask")
 
