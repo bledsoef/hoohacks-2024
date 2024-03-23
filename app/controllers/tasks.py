@@ -19,9 +19,7 @@ async def getSentRecsForUser(username: str, db: Session = Depends(get_db)):
     try:        
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None
-
         tasksForUser = [task.__dict__ for task in db.query(Task).filter(Task.user == username).all()]
-        print(tasksForUser)
         return tasksForUser
     except Exception as e:
         print(e)
