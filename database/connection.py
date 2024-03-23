@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 import os 
 
 # get the USERNAME environment variable from .env
-URL_DATABASE = f'mysql+pymysql://root:root@localhost:3306/spotify_rex'
+URL_DATABASE = f'mysql+pymysql://root:root@localhost:3306/hoohacks_2024'
 
 engine = create_engine(URL_DATABASE)
 
