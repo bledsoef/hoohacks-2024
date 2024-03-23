@@ -36,6 +36,7 @@ async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted
         task_id = int(task_id)
         taskToUpdate = db.query(Task).filter(Task.id == task_id).first()
         assert taskToUpdate is not None
+        # Update the values that we've submitted
         taskToUpdate.status = status or taskToUpdate.status
         taskToUpdate.dateCompleted = dateCompleted or taskToUpdate.dateCompleted
         taskToUpdate.taskDescription = taskDescription or taskToUpdate.taskDescription
