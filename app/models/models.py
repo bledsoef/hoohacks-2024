@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, Date, ForeignKey
 from sqlalchemy.orm import relationship
 from database.connection import Base
+
 class User(Base):
     __tablename__ = "users"
     
@@ -8,6 +9,8 @@ class User(Base):
     firstName = Column(String(50))
     lastName = Column(String(50))
     email = Column(String(50))
+
+    tasks_assigned = relationship("Task", back_populates="assignee")
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -18,3 +21,5 @@ class Task(Base):
     dateCompleted = Column(Date, nullable=True)
     taskDescription = Column(String(100), nullable=False)
     rewardDescription = Column(String(100), nullable=False)
+
+    assignee = relationship("User", back_populates="tasks_assigned")
