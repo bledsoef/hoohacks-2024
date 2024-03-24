@@ -759,12 +759,11 @@ def usequest():
 	selected_quest = g.quest_list[curr_quest]
 
 	if selected_quest['status'] == 'Completed':
-		print "redeeming quest rewards"  # beansprint
 		redeemreward(selected_quest['rewardQuantity'], selected_quest['rewardMetric'].lower(), selected_quest['id'])
 
 
 def redeemreward(quantity, metric, task_id):
-	if metric not in {'attack', 'defence', 'gold', 'exp'}: 
+	if metric not in {'attack', 'defense', 'gold', 'skillpoints'}: 
 		print "Invalid reward metric provided: '{}'".format(metric)
 		return
 	url = "http://127.0.0.1:8000/redeemTask"
