@@ -35,7 +35,7 @@ from player import *
 #width/height of inv canvas, in tiles.
 # (g.tilesize + the 3 pixel border)
 inv_width = 4
-inv_height = 7
+inv_height = 8
 
 #width/height of the equipment canvas, in tiles.
 equip_size = 3
@@ -48,7 +48,7 @@ curr_item = 0
 global active_button
 active_button = 0
 
-#currently selected button. 0=Use, 1=Drop, 2=Wear, 3=Skill, 4=Save, 5=Leave
+#currently selected button. 0=Use, 1=Drop, 2=Wear, 3=Skill, 4=Save, 5=Quest, 6=Leave   Beans
 cur_button = 0
 
 #Like cur_button, but for the inner menus.
@@ -275,6 +275,7 @@ def refresh_use_buttons(event=0): refresh_inner_buttons("use")
 def refresh_drop_buttons(event=0): refresh_inner_buttons("drop")
 def refresh_equip_buttons(event=0): refresh_inner_buttons("equip")
 def refresh_skill_buttons(event=0): refresh_inner_buttons("skill")
+def refresh_quest_buttons(event=0): refresh_inner_buttons("quest")
 
 #Refreshes the inner menu buttons.
 def refresh_inner_buttons(screen_str):
@@ -697,19 +698,24 @@ def refresh_menu_buttons():
 	drop_image = "drop.png"
 	skill_image = "skill.png"
 	save_image = "save.png"
+	quest_image = "quest.png"  # Beans
 	leave_image = "leave.png"
 	if (cur_button == 0): use_image = "use_sel.png"
 	elif (cur_button == 1): equip_image = "equip_sel.png"
 	elif (cur_button == 2): drop_image = "drop_sel.png"
 	elif (cur_button == 3): skill_image = "skill_sel.png"
 	elif (cur_button == 4): save_image = "save_sel.png"
-	elif (cur_button == 5): leave_image = "leave_sel.png"
+	elif (cur_button == 5): quest_image = "quest_sel.png"  # Beans
+	elif (cur_button == 6): leave_image = "leave_sel.png" # Beans
+
+	#beans, need to address getting a quest_height
 
 	g.screen.blit(g.buttons[use_image], (base_x, base_y))
 	g.screen.blit(g.buttons[equip_image], (base_x, base_y+equip_height))
 	g.screen.blit(g.buttons[drop_image], (base_x, base_y+drop_height))
 	g.screen.blit(g.buttons[skill_image], (base_x, base_y+skill_height))
 	g.screen.blit(g.buttons[save_image], (base_x, base_y+save_height))
+	g.screen.blit(g.buttons[quest_image], (base_x, base_y+quest_height))
 	g.screen.blit(g.buttons[leave_image], (base_x, base_y+leave_height))
 
 	pygame.display.flip()
@@ -767,10 +773,10 @@ def menu_key_handler(key_name):
 		return 1
 	elif (key_name == g.bindings["right"]) or (key_name == g.bindings["down"]):
 		cur_button += 1
-		if cur_button > 5: cur_button = 0
+		if cur_button > 6: cur_button = 0
 	elif (key_name == g.bindings["left"]) or (key_name == g.bindings["up"]):
 		cur_button -= 1
-		if cur_button < 0: cur_button = 5
+		if cur_button < 0: cur_button = 6
 	elif (key_name == g.bindings["action"]):
 		#I take care of refresh by grabbing the current window as a bitmap,
 		#then redisplaying it. Note that the -64 is to prevent the message
@@ -786,7 +792,10 @@ def menu_key_handler(key_name):
 		elif (cur_button == 4):
 			inv_savegame()
 			return 0
-		elif (cur_button == 5):
+		elif (cur_button == 5): # beans
+			print("Opening the quest menu") # beanstodo: open the quest menu
+			return 0
+		elif (cur_button == 6):
 			leave_inv()
 			return 1
 		g.screen.blit(old_screen_refresh, (0,0))
@@ -1051,8 +1060,9 @@ def menu_mouse_move(xy):
 	elif (base_loc_y < drop_height): cur_button = 1
 	elif (base_loc_y < skill_height): cur_button = 2
 	elif (base_loc_y < save_height): cur_button = 3
-	elif (base_loc_y < leave_height): cur_button = 4
-	else: cur_button = 5
+	elif (base_loc_y < quest_height): cur_button = 4  # Beans
+	elif (base_loc_y < leave_height): cur_button = 5  # Beans
+	else: cur_button = 6  # Beans
 	refresh_menu_buttons()
 
 def inner_mouse_move(xy, button = ""):
@@ -1092,9 +1102,10 @@ def init_window_inv():
 	#Location of the various buttons.
 	global equip_height; equip_height = g.buttons["use.png"].get_height()
 	global drop_height; drop_height = equip_height + g.buttons["equip.png"].get_height()
-	global skill_height; skill_height = drop_height + g.buttons["skill.png"].get_height()
-	global save_height; save_height = skill_height + g.buttons["drop.png"].get_height()
-	global leave_height; leave_height = save_height + g.buttons["save.png"].get_height()
+	global skill_height; skill_height = drop_height + g.buttons["drop.png"].get_height()
+	global save_height; save_height = skill_height + g.buttons["skill.png"].get_height()
+	global quest_height; quest_height = save_height + g.buttons["save.png"].get_height()
+	global leave_height; leave_height = quest_height + g.buttons["quest.png"].get_height()
 	global total_height; total_height = leave_height + g.buttons["leave.png"].get_height()
 
 	global button_width; button_width = g.buttons["drop.png"].get_width()
