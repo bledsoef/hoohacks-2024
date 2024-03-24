@@ -73,7 +73,6 @@ async def getSteps():
         }
 
 @router.post("/updateTask")
-
 async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted: str = None, taskDescription: str = None, rewardDescription: str = None, db: Session = Depends(get_db)):
     # updateableTaskAttributes = ['status', 'dateCompleted', 'taskDescription', 'rewardDescription']
     try:
@@ -86,7 +85,26 @@ async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted
         taskToUpdate.taskDescription = taskDescription or taskToUpdate.taskDescription
         taskToUpdate.rewardDescription = rewardDescription or taskToUpdate.rewardDescription
         db.commit()
-        return "Task updated successfully"
+        return {"message": "Task updated successfully"}
     except Exception as e:
         print(e)
         return {"message": "Failed to update task"}
+    
+
+@router.post("/redeemTask")
+async def redeemTask(task_id: Union[int, str], db: Session = Depends(get_db)):
+    """
+    A convenience route which sets a task's status from completed to redeemed or returns an error message
+    """
+    try:
+        task_id = int(task_id)
+        taskToRedeem = db.query(Task).filter(Task.id == task_id).first()
+        assert taskToRedeem is not None
+        assert taskToRedeem.status.lower() in {"complete", "completed"}
+        taskToRedeem.status = "redeemed"
+        db.commit()
+        return {"message": "Task redeemed successfully"}
+
+    except Exception as e:
+        print(e)
+        return {"message": "Failed to redeem task"}
