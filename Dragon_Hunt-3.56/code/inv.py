@@ -27,7 +27,7 @@ import pygame
 import g
 import main
 import action
-import re
+import requests
 import item
 
 from player import *
@@ -239,6 +239,7 @@ def open_quest_menu():
 	g.load_quests()
 	open_inner_menu("quest")
 	g.cur_window = "inventory_quest"
+	create_inv_display("quest")
 	refresh_quest("quest")
 	refresh_quest_buttons()
 	while 1:
@@ -296,11 +297,12 @@ def create_inv_display(screen_str):
 		inv_canvas_height)/2+g.buttons["leave.png"].get_height()-tmp_y_base))
 
 	#per-item borders
-	for y in range(inv_height):
-		for x in range(inv_width):
-			g.create_norm_box((tmp_x_base+x*g.tilesize + 2 * (x+1),
-				tmp_y_base+y*g.tilesize + 2 * (y+1)), (g.tilesize, g.tilesize),
-				inner_color="dh_green")
+	if g.cur_window != 'inventory_quest':
+		for y in range(inv_height):
+			for x in range(inv_width):
+				g.create_norm_box((tmp_x_base+x*g.tilesize + 2 * (x+1),
+					tmp_y_base+y*g.tilesize + 2 * (y+1)), (g.tilesize, g.tilesize),
+					inner_color="dh_green")
 
 def refresh_use_buttons(event=0): refresh_inner_buttons("use")
 def refresh_drop_buttons(event=0): refresh_inner_buttons("drop")
@@ -458,19 +460,31 @@ def refresh_quest(screen_str):
 	# beanstodo: fill this with refresh content for the menu filled with quests
 	# The actual quests that are assigned
 	curr_quest = curr_item // 8
-	print curr_quest
-	print g.quest_list
+	line_length = 20
 
 	# clear the background
-	g.create_norm_box((tmp_menu_x_base,
-		tmp_menu_y_base+tmp_menu_height), (tmp_menu_width, 17))
+	create_inv_display("quest")
+	refresh_quest_buttons()
+	# g.create_norm_box((tmp_menu_x_base,
+	# 	tmp_menu_y_base+tmp_menu_height), (tmp_menu_width, 17))
 	
 	# count the number of quests and put boxes in the menu
 	quest_height = g.buttons['quest_item.png'].get_height() - 2
 	for i in range(len(g.quest_list)):
-		quest_item_picture = 'quest_item.png'
-		if i == curr_quest: quest_item_picture = 'quest_item_sel.png'
-		g.screen.blit(g.buttons[quest_item_picture], (base_x-60, base_y + (i * quest_height)+2))
+		quest = g.quest_list[i]
+		if quest['status'] == 'Assigned':
+			quest_item_picture = 'quest_item.png'
+			if i == curr_quest: quest_item_picture = 'quest_item_sel.png'
+		elif quest['status'] == 'Completed':
+			quest_item_picture = 'quest_item_completed.png'
+			if i == curr_quest: quest_item_picture = 'quest_item_completed_sel.png'
+
+		quest_item_xy = (base_x-60, base_y + (i * quest_height)+2)
+		g.screen.blit(g.buttons[quest_item_picture], quest_item_xy)
+		g.print_string(g.screen, quest['title'], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+15))
+		g.print_string(g.screen, quest['taskDescription'][:line_length], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+35))
+		g.print_string(g.screen, quest['taskDescription'][line_length:2*line_length], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+45))
+
 
 	pygame.display.flip()
 
@@ -742,6 +756,35 @@ def useskill(free_skill=0):
 			return "end"
 	return 1
 
+def usequest():
+	curr_quest = curr_item // 8
+	selected_quest = g.quest_list[curr_quest]
+
+	if selected_quest['status'] == 'Completed':
+		print "redeeming quest rewards"  # beansprint
+		redeemreward(selected_quest['rewardQuantity'], selected_quest['rewardMetric'].lower(), selected_quest['id'])
+
+
+def redeemreward(quantity, metric, task_id):
+	if metric not in {'attack', 'defence', 'gold', 'exp'}: 
+		print "Invalid reward metric provided: '{}'".format(metric)
+		return
+	url = "http://127.0.0.1:8000/redeemTask"
+	params = {"task_id": task_id}
+	response = requests.post(url, params=params)
+	if response.status_code == 200:
+		player.give_stat(metric, quantity)
+		refresh_stat_display()
+		print "rewards redeemed successfully"
+	else:
+		print "problem with reward redemption"
+	g.load_quests()
+
+
+	
+
+
+
 
 #refresh buttons in the main inv menu.
 def refresh_menu_buttons():
@@ -911,7 +954,7 @@ def skill_key_handler(key_name):
 def quest_key_handler(key_name):
 	tmp = inner_key_handler(key_name)  # action is 2 and all other values don't mean anything
 	if tmp == 2:
-		tmp2 = useskill()  # beanstodo write something that collects rewards for the quest 
+		tmp2 = usequest()  # beanstodo do things here, mostly just a landmark
 	if tmp != 1: refresh_quest("quest")
 	return tmp
 
@@ -1103,7 +1146,6 @@ def skill_mouse_dbl_click(xy):
 #the inv box) and returns the selected box, or -1 for none. temp_size is
 #the width of the inventory box.
 def which_box(x, y, temp_size):
-	print g.cur_window
 	#Check for the left border
 	if x < 3: return -1
 	#Transform x from pixels to tiles
