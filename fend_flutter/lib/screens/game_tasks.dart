@@ -35,7 +35,8 @@ class GameTasksScreen extends StatelessWidget{
                 metric: task["metric"] ?? "",
                 dateCompleted: task["dateCompleted"] ?? "",
                 expirationDate: task["expirationDate"] ?? "",
-                progress: 0, // Assuming progress can't be null based on your code
+                needsVerification: task.containsKey("progress") ? false : true, // If task["needsVerification
+                progress: task.containsKey("progress") ? task["progress"] : 0, // Assuming progress can't be null based on your code
                 category: task["category"] ?? "",
               ),
               isExpired: gameName == "Expired" ? true : false,
