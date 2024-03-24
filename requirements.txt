@@ -3,3 +3,6 @@ fastapi
 sqlalchemy
 pymysql
 mangum
+pygame
+python-dotenv
+pathlib
