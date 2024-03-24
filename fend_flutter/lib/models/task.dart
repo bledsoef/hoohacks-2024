@@ -2,8 +2,8 @@ class GameTask {
   const GameTask({
     required this.gameName,
     required this.title,
-    required this.details,
-    required this.reward,
+    required this.taskDescription,
+    required this.rewardDescription,
     required this.networkImage,
     required this.expirationDate,
     required this.status,
@@ -16,11 +16,11 @@ class GameTask {
 
   final String gameName;
   final String title;
-  final String details;
-  final String reward;
+  final String taskDescription;
+  final String rewardDescription;
   final String networkImage;
   final String expirationDate;
-  final bool status;
+  final String status;
   final String dateCompleted;
   final int quantity;
   final String metric;

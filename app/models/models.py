@@ -18,6 +18,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     user = Column(String(50), ForeignKey("users.username"))
     title = Column(String(50))
+    gameTitle = Column(String(50), nullable=False)
     status = Column(String(50), nullable=False)
     dateCompleted = Column(Date, nullable=True)
     expirationDate = Column(Date)
@@ -26,5 +27,6 @@ class Task(Base):
     metric = Column(String(50), nullable=True)
     taskDescription = Column(String(100), nullable=False)
     rewardDescription = Column(String(100), nullable=False)
+    networkImage = Column(String(256))
 
     assignee = relationship("User", back_populates="tasks_assigned")

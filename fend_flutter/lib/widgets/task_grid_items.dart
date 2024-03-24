@@ -21,6 +21,7 @@ class TaskGridItems extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
+          // )
         ),
         child: !isExpired ? CurrentList(task: task): ExpiredList(task: task) ,
       ),
@@ -60,7 +61,7 @@ class CurrentList extends StatelessWidget {
             child: Column(
               children: [ 
                 Text( 
-                  "Task: ${task.details}",
+                  "Task: ${task.taskDescription}",
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -73,7 +74,7 @@ class CurrentList extends StatelessWidget {
                 ),
                 
                 Text( 
-                  "Reward: ${task.reward}",
+                  "Reward: ${task.rewardDescription}",
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -126,7 +127,7 @@ class ExpiredList extends StatelessWidget {
             child: Column(
               children: [ 
                 Text( 
-                  task.status ? "YOU DID IT!" : "FAILED!",
+                  task.status == "Completed" ? "YOU DID IT!" : "FAILED!",
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   softWrap: true,
@@ -134,11 +135,11 @@ class ExpiredList extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold, 
-                    color: task.status ? Colors.green : Colors.red
+                    color: task.status == "Completed" ? Colors.green : Colors.red
                   ),
                 ),
                 Text( 
-                  "Task: ${task.details}",
+                  "Task: ${task.taskDescription}",
                   maxLines: 2,
                   textAlign: TextAlign.center,
                   softWrap: true,

@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
                   width: 16.0,
                 ),
                 Text(
-                  kTitle,
+                  "APP NAME",
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!
@@ -68,7 +68,7 @@ class MainDrawer extends StatelessWidget {
             ),
             onTap: (){
               Navigator.pop(context);
-              Navigator.push(context, MaterialPageRoute(builder: ((context) => const GameTasksScreen(gameName: "Expired"))));
+              Navigator.push(context, MaterialPageRoute(builder: ((context) => const GameTasksScreen(gameName: "Expired", gameData: {}))));
             },
           ),
         ],
