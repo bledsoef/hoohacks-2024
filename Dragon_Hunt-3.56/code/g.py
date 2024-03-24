@@ -121,8 +121,11 @@ level_name = "Level"
 exp_list = ""
 
 
+# Beans QuestList
+quest_list = []
+
 #Used in new_game
-default_player_name = "Alfred"
+default_player_name = "bledsoef"
 
 #Used in place of some of the Tkinter variables.
 break_one_loop = 0
@@ -324,6 +327,10 @@ def init_data():
 	load_buttons()
 	load_icons()
 	load_sounds()
+	print_string(screen, "Loading Quests", font,
+			  (screen_size[0]/2, screen_size[1]/2))
+	pygame.display.flip()
+	load_quests()
 
 #Get the name of the module from the variables.txt file. Note that this
 #does not set the game name, only returns it. This lets it be used in rpg.py
@@ -768,6 +775,24 @@ def interpret_lines(temp_array):
 			temp_array[cur_line].strip()
 		cur_line += 1
 	return temp_array
+
+import requests
+def load_quests():
+	# Beans
+	global quest_list
+	url = "http://127.0.0.1:8000/getTasksForUser"
+	params = {"username": player.name}
+	response = requests.get(url, params=params)
+	if response.status_code == 200:
+		quest_data = response.json()["Dragon Hunt"]
+		completed_quests = quest_data['completed']
+		assigned_quests = quest_data['assigned']
+		quest_list = (completed_quests + assigned_quests)[:4]
+	else:
+		print "Could not load quests"
+		quest_list = []
+
+		
 
 
 sounds = {}

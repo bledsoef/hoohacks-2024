@@ -9,9 +9,12 @@ with Session(engine) as session:
     finn = User(username="bledsoef", firstName="finn", lastName="bledsoe", email="bledsoef@berea.edu")
     lawrence = User(username="hoerstl", firstName="lawrence", lastName="hoerst", email="hoerstl@berea.edu")
 
-    test_task1 = Task(user="bledsoef", title="World Traveler", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(hours=1), quantity=10000, metric="steps", category="health", taskDescription="Submit a picture of an Apple.", rewardDescription="10 coins.")
-    test_task3 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now(), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins.")
-    test_task4 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=datetime.now(), expirationDate=datetime.now() - timedelta(days=1), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins.")
+
+    test_task1 = Task(user="bledsoef", title="World Traveler", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(hours=1), quantity=10000, metric="steps", category="health", taskDescription="Submit a picture of an Apple.", rewardDescription="10 coins", rewardQuantity=10, rewardMetric='gold')
+    test_task3 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now(), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins.", rewardQuantity=1, rewardMetric='attack')
+    test_task4 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=datetime.now(), expirationDate=datetime.now() - timedelta(days=1), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins", rewardQuantity=1, rewardMetric='defense')
+    test_task5 = Task(user="bledsoef", title="Hunt a Real Dragon", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(days=1), quantity=5000, metric="steps", category="health", taskDescription="With a sword!", rewardDescription="10 defense", rewardQuantity=10, rewardMetric='defense')
+
 
     cod1 = Task(user="bledsoef", title="Marathon mania", gameTitle="Call of Duty", status="Assigned", dateCompleted=None, expirationDate=datetime(2024, 3, 25), quantity=50, metric="miles", category="health", taskDescription="Run 50 miles.", rewardDescription="50 experience points.", networkImage="https://bnetcmsus-a.akamaihd.net/cms/blog_header/ti/TI4WAD6CJ4Y51691017340326.jpg")
     cod2 = Task(user="bledsoef", title="Move your body", gameTitle="Call of Duty", status="Assigned", dateCompleted=None, expirationDate=datetime(2024, 3, 25), quantity=30, metric="minutes of exercise", category="health", taskDescription="Exercise for 30 minutes.", rewardDescription="20 experience points.", networkImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXE7LUfmU4s3ooIuFUCjw0nlGBkOw61DNqnFZJJqys9g&s")
@@ -30,9 +33,11 @@ with Session(engine) as session:
     dota3 = Task(user="bledsoef", title="Reader's time", gameTitle="Dota 2", status="Assigned", dateCompleted=None, expirationDate=datetime(2024, 3, 27), quantity=10, metric="pages read", category="education", taskDescription="Read 10 pages of Pride and Prejudice.", rewardDescription="50 credit points", networkImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbtDASBjQ4F7BJp-5k19S_-Ht8eWLZ0acAmQ&s")
     dota4 = Task(user="bledsoef", title="Chess master", gameTitle="Dota 2", status="Assigned", dateCompleted=None, expirationDate=datetime(2024, 3, 25), quantity=20, metric="minutes of chess played", category="skill", taskDescription="Play chess for 20mins", rewardDescription="50 credit points", networkImage="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTNWmjaNQddELp8jXIIaLINh4Icl_97gqbM7AalSPB9Q&s")
 
+
     session.add_all([finn, lawrence])
     session.add_all([test_task1, test_task3, test_task4])
     session.add_all([cod1, cod2, cod3, cod4, cod5, cod6])
+
     session.add_all([smash1, smash2, smash3, smash4])
     session.add_all([dota1, dota2, dota3, dota4])
 

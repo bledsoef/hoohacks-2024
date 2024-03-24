@@ -27,7 +27,7 @@ import pygame
 import g
 import main
 import action
-import re
+import requests
 import item
 
 from player import *
@@ -43,6 +43,7 @@ equip_size = 3
 #Currently selected item number. If this is higher than the inventory can hold,
 #it represents a position within the equipment display.
 curr_item = 0
+curr_quest = 0
 
 
 global active_button
@@ -232,6 +233,35 @@ def open_skill_menu():
 				return
 	menu_bind_keys()
 
+def open_quest_menu():
+	g.load_quests()
+	open_inner_menu("quest")
+	g.cur_window = "inventory_quest"
+	create_inv_display("quest")
+	refresh_quest("quest")
+	refresh_quest_buttons()
+	while 1:
+		pygame.time.wait(30)
+		g.clock.tick(30)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT: return
+			elif event.type == pygame.KEYDOWN:
+				tmp = quest_key_handler(event.key)
+				if tmp == 1:
+					return
+				elif tmp == "end":
+					return "end"
+			elif event.type == pygame.MOUSEMOTION:
+				quest_mouse_move(event.pos)
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				if quest_mouse_click(event.pos) == 1:
+					return
+		tmpjoy=g.run_joystick()
+		if tmpjoy != 0:
+			if skill_key_handler(tmpjoy) == 1:
+				return
+	menu_bind_keys()
+
 #Generic function for creating a sub-menu for the inv.
 def open_inner_menu(screen_str):
 	global inner_cur_button; inner_cur_button = 0
@@ -265,11 +295,12 @@ def create_inv_display(screen_str):
 		inv_canvas_height)/2+g.buttons["leave.png"].get_height()-tmp_y_base))
 
 	#per-item borders
-	for y in range(inv_height):
-		for x in range(inv_width):
-			g.create_norm_box((tmp_x_base+x*g.tilesize + 2 * (x+1),
-				tmp_y_base+y*g.tilesize + 2 * (y+1)), (g.tilesize, g.tilesize),
-				inner_color="dh_green")
+	if g.cur_window != 'inventory_quest':
+		for y in range(inv_height):
+			for x in range(inv_width):
+				g.create_norm_box((tmp_x_base+x*g.tilesize + 2 * (x+1),
+					tmp_y_base+y*g.tilesize + 2 * (y+1)), (g.tilesize, g.tilesize),
+					inner_color="dh_green")
 
 def refresh_use_buttons(event=0): refresh_inner_buttons("use")
 def refresh_drop_buttons(event=0): refresh_inner_buttons("drop")
@@ -349,6 +380,7 @@ def refresh_equip():
 
 def refresh_inv_display(screen_str):
 	#Draw a selection box around the current item.
+
 	x = tmp_x_base
 	y = tmp_y_base
 	for i in range(len(item.inv)):
@@ -422,6 +454,44 @@ def refresh_skill(screen_str):
 
 	pygame.display.flip()
 
+def refresh_quest(screen_str):
+	# The actual quests that are assigned
+	curr_quest = curr_item // 8
+	line_length = 20
+
+	# clear the background
+	create_inv_display("quest")
+	refresh_quest_buttons()
+	# g.create_norm_box((tmp_menu_x_base,
+	# 	tmp_menu_y_base+tmp_menu_height), (tmp_menu_width, 17))
+	
+	# count the number of quests and put boxes in the menu
+	quest_height = g.buttons['quest_item.png'].get_height() - 2
+	for i in range(len(g.quest_list)):
+		quest = g.quest_list[i]
+		if quest['status'] == 'Assigned':
+			quest_item_picture = 'quest_item.png'
+			if i == curr_quest: quest_item_picture = 'quest_item_sel.png'
+		elif quest['status'] == 'Completed':
+			quest_item_picture = 'quest_item_completed.png'
+			if i == curr_quest: quest_item_picture = 'quest_item_completed_sel.png'
+
+		quest_item_xy = (base_x-60, base_y + (i * quest_height)+2)
+		g.screen.blit(g.buttons[quest_item_picture], quest_item_xy)
+		g.print_string(g.screen, quest['title'], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+15))
+		g.print_string(g.screen, quest['taskDescription'][:line_length], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+35))
+		g.print_string(g.screen, quest['taskDescription'][line_length:2*line_length], g.font, (quest_item_xy[0]+15, quest_item_xy[1]+45))
+
+
+	pygame.display.flip()
+
+	# put the quest text into the boxes
+
+
+
+	pygame.display.flip()
+
+
 
 def leave_inner():
 	g.break_one_loop += 1
@@ -462,6 +532,7 @@ def refresh_stat_display():
 # 		bar_start+bar_height*2+1, fill="#2525EE", tags=("stats", "inv"))
 # 	main.canvas_map.lift("bar")
 
+	# beansstats, these are the stat displays
 	tmp_width = 52
 	g.screen.fill(g.colors["light_gray"], (start_x + tmp_width,
 		(g.tilesize*main.mapsizey - total_height)/2+5, 50, 14))
@@ -682,6 +753,37 @@ def useskill(free_skill=0):
 			return "end"
 	return 1
 
+def usequest():
+	curr_quest = curr_item // 8
+	selected_quest = g.quest_list[curr_quest]
+
+	if selected_quest['status'] == 'Completed':
+		redeemreward(selected_quest['rewardQuantity'], selected_quest['rewardMetric'].lower(), selected_quest['id'])
+
+
+def redeemreward(quantity, metric, task_id):
+	if metric not in {'attack', 'defense', 'gold', 'skillpoints'}: 
+		print "Invalid reward metric provided: '{}'".format(metric)
+		return
+	url = "http://127.0.0.1:8000/redeemTask"
+	params = {"task_id": task_id}
+	response = requests.post(url, params=params)
+	if response.status_code == 200:
+		player.give_stat(metric, quantity)
+		refresh_stat_display()
+		main.print_message("** Reward Redemption Successful **")
+		main.print_message("** Gained {} {} **".format(quantity, metric))
+		g.savegame(player.name)
+	else:
+		main.print_message("** problem with reward redemption **")
+	pygame.display.flip()
+	g.load_quests()
+
+
+	
+
+
+
 
 #refresh buttons in the main inv menu.
 def refresh_menu_buttons():
@@ -707,8 +809,6 @@ def refresh_menu_buttons():
 	elif (cur_button == 4): save_image = "save_sel.png"
 	elif (cur_button == 5): quest_image = "quest_sel.png"  # Beans
 	elif (cur_button == 6): leave_image = "leave_sel.png" # Beans
-
-	#beans, need to address getting a quest_height
 
 	g.screen.blit(g.buttons[use_image], (base_x, base_y))
 	g.screen.blit(g.buttons[equip_image], (base_x, base_y+equip_height))
@@ -792,9 +892,7 @@ def menu_key_handler(key_name):
 		elif (cur_button == 4):
 			inv_savegame()
 			return 0
-		elif (cur_button == 5): # beans
-			print("Opening the quest menu") # beanstodo: open the quest menu
-			return 0
+		elif (cur_button == 5): open_quest_menu() # beans
 		elif (cur_button == 6):
 			leave_inv()
 			return 1
@@ -806,25 +904,26 @@ def menu_key_handler(key_name):
 def inner_key_handler(key_name):
 	global cur_button
 	global curr_item
+	quest_icon_count = len(g.quest_list)
 	if (key_name == g.bindings["cancel"]):
 		#leave_inner()
 		return 1
 	elif (key_name == g.bindings["right"]):
-		curr_item += 1
-		if curr_item >= inv_width * inv_height:
-			curr_item -= inv_width * inv_height
+		curr_item += 1 if g.cur_window != 'inventory_quest' else 8
+		if curr_item >= ((inv_width * inv_height) if g.cur_window != 'inventory_quest' else inv_width * 2 * quest_icon_count):
+			curr_item = 0
 	elif (key_name == g.bindings["left"]):
-		curr_item -= 1
+		curr_item -= 1 if g.cur_window != 'inventory_quest' else 8
 		if curr_item < 0:
-			curr_item += inv_width * inv_height
+			curr_item = (inv_width * inv_height - 1) if g.cur_window != 'inventory_quest' else quest_icon_count * 8 - 1
 	elif (key_name == g.bindings["up"]):
-		curr_item = curr_item - inv_width
+		curr_item -= (inv_width) if g.cur_window != 'inventory_quest' else inv_width * 2
 		if curr_item < 0:
-			curr_item += inv_width * inv_height
+			curr_item = (inv_width * inv_height - 1) if g.cur_window != 'inventory_quest' else quest_icon_count * 8 - 1
 	elif (key_name == g.bindings["down"]):
-		curr_item = curr_item + inv_width
-		if curr_item >= inv_width * inv_height:
-			curr_item -= inv_width * inv_height
+		curr_item += (inv_width) if g.cur_window != 'inventory_quest' else inv_width * 2
+		if curr_item >= ((inv_width * inv_height) if g.cur_window != 'inventory_quest' else inv_width * 2 * quest_icon_count):
+			curr_item = 0
 	elif (key_name == g.bindings["action"]):
 		return 2
 	return 0
@@ -847,6 +946,13 @@ def skill_key_handler(key_name):
 		tmp2 = useskill()
 		if tmp2 == "end": return "end"
 	if tmp != 1: refresh_skill("skill")
+	return tmp
+
+def quest_key_handler(key_name):
+	tmp = inner_key_handler(key_name)
+	if tmp == 2:
+		tmp2 = usequest() 
+	if tmp != 1: refresh_quest("quest")
 	return tmp
 
 #I have to do this separate, as the equip screen has an extra display.
@@ -949,6 +1055,14 @@ def skill_mouse_click(xy):
 	if tmp != 1: refresh_skill("skill")
 	return tmp
 
+def quest_mouse_click(xy):
+	tmp = inner_mouse_click(xy, "quest")
+	if tmp == 2:
+		tmp2 = usequest()
+		if tmp2 == "end": return "end"
+	if tmp != 1: refresh_quest("quest")
+	return tmp
+
 def equip_mouse_click(xy):
 	#decide if the mouse is within one of the boxes.
 	global curr_item
@@ -1034,16 +1148,16 @@ def which_box(x, y, temp_size):
 	tempx = x - 3
 	likelyx = tempx / (g.tilesize + 2)
 	tempx = tempx - (likelyx * (g.tilesize + 2))
-	if tempx >= g.tilesize - 1: return -1
+	if tempx >= g.tilesize - 1 and g.cur_window != "inventory_quest": return -1
 
 
 	#Check for the top border
-	if y < 3: return -1
+	if y < 3 and g.cur_window != "inventory_quest": return -1
 	#Transform y from pixels to tiles
 	tempy = y - 3
 	likelyy = tempy / (g.tilesize + 2)
 	tempy = tempy - (likelyy * (g.tilesize + 2))
-	if tempy >= g.tilesize - 1: return -1
+	if tempy >= g.tilesize - 1 and g.cur_window != "inventory_quest": return -1
 	#Final check, then return the location in the inv.
 	if likelyy * temp_size + likelyx >= temp_size * inv_height: return -1
 	if likelyx >= temp_size: return -1
@@ -1092,6 +1206,10 @@ def equip_mouse_move(xy):
 def skill_mouse_move(xy):
 	if inner_mouse_move(xy, "skill"):
 		refresh_skill_buttons()
+
+def quest_mouse_move(xy):
+	if inner_mouse_move(xy, "quest"):
+		refresh_quest_buttons()
 
 #This creates the inv area within the map canvas.
 def init_window_inv():

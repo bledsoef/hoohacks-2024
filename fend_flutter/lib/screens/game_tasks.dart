@@ -23,7 +23,7 @@ class GameTasksScreen extends StatelessWidget{
         children: [
           for (final task in assignedTasks!)
             TaskGridItems(
-              task: Task(
+              task: GameTask(
                 gameName: gameName,
                 title: task["title"] ?? "", // If task["title"] is null, use an empty string
                 taskDescription: task["taskDescription"] ?? "",

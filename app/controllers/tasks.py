@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from database.connection import get_db
 from app.logic.tasks import create_new_task, get_tasks_for_user, get_fitbit_information
@@ -36,7 +36,7 @@ async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
         return grouped_tasks
     except Exception as e:
         print(e)
-        return {"message": "Failed to get recs"}    
+        raise HTTPException(status_code=400, detail="Invalid username")
 
 @router.get("/getDailyFitbitInformation")
 async def getSteps():
@@ -55,10 +55,29 @@ async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted
         taskToUpdate.taskDescription = taskDescription or taskToUpdate.taskDescription
         taskToUpdate.rewardDescription = rewardDescription or taskToUpdate.rewardDescription
         db.commit()
-        return "Task updated successfully"
+        return {"message": "Task updated successfully"}
     except Exception as e:
         print(e)
         return {"message": "Failed to update task"}
+    
+
+@router.post("/redeemTask")
+async def redeemTask(task_id: Union[int, str], db: Session = Depends(get_db)):
+    """
+    A convenience route which sets a task's status from completed to redeemed or returns an error message
+    """
+    try:
+        task_id = int(task_id)
+        taskToRedeem = db.query(Task).filter(Task.id == task_id).first()
+        assert taskToRedeem is not None
+        assert taskToRedeem.status.lower() in {"complete", "completed"}
+        taskToRedeem.status = "Redeemed"
+        db.commit()
+        return {"message": "Task redeemed successfully"}
+
+    except Exception as e:
+        print(e)
+        return {"message": "Failed to redeem task"}
 
 @router.post("/validateTask")
 async def validateTask(request: Request, db: Session = Depends(get_db)):
