@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
-
-
 class Task {
   const Task({
+    required this.gameName,
     required this.title,
     required this.details,
     required this.reward,
@@ -16,6 +14,7 @@ class Task {
     required this.progress
   });
 
+  final String gameName;
   final String title;
   final String details;
   final String reward;
@@ -28,13 +27,3 @@ class Task {
   final String category;
   final int progress;
 } 
-
-//Title
-//Details
-//Rewards
-//ExpirationDate
-//Status
-//DateCompleted - not here
-//Quantity
-//Metric
-//Category

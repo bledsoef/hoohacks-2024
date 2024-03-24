@@ -3,8 +3,8 @@ import 'package:fend_flutter/screens/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
-class TaskGridCategory extends StatelessWidget {
-  const TaskGridCategory({super.key, required this.task});
+class TaskGridItems extends StatelessWidget {
+  const TaskGridItems({super.key, required this.task});
 
   final Task task;
 
@@ -20,9 +20,6 @@ class TaskGridCategory extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          // image: FadeInImage,
-          // begin: Alignment.topLeft,
-          // end: Alignment.bottomRight
           // )
         ),
         child: Stack(

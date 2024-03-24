@@ -1,12 +1,7 @@
 import 'dart:io';
-
-import 'package:fend_flutter/data/dummy_data.dart';
 import 'package:fend_flutter/models/task.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
