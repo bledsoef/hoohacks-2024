@@ -101,7 +101,7 @@ async def redeemTask(task_id: Union[int, str], db: Session = Depends(get_db)):
         taskToRedeem = db.query(Task).filter(Task.id == task_id).first()
         assert taskToRedeem is not None
         assert taskToRedeem.status.lower() in {"complete", "completed"}
-        taskToRedeem.status = "redeemed"
+        taskToRedeem.status = "Redeemed"
         db.commit()
         return {"message": "Task redeemed successfully"}
 
