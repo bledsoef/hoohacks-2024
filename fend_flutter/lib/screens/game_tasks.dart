@@ -26,9 +26,6 @@ class GameTasksScreen extends StatelessWidget{
           for (final category in codTasks)
             TaskGridCategory(
               task: category,
-              onTap: () {
-                // _selectCategory(context, category);
-              },
             )
         ],
       ),
