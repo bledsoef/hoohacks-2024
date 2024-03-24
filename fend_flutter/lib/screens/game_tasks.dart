@@ -23,13 +23,14 @@ class GameTasksScreen extends StatelessWidget{
         children: [
           for (final task in assignedTasks!)
             TaskGridItems(
-              task: Task(
+              task: GameTask(
                 gameName: gameName,
+                id: task["id"] ?? "",
                 title: task["title"] ?? "", // If task["title"] is null, use an empty string
                 taskDescription: task["taskDescription"] ?? "",
                 rewardDescription: task["rewardDescription"] ?? "",
                 status: task["status"] ?? "",
-                networkImage: "", // Assuming you want an empty string if this is null, no need for conditional handling
+                networkImage: task["networkImage"] ?? "", // Assuming you want an empty string if this is null, no need for conditional handling
                 quantity: task["quantity"] ?? 0, // If task["quantity"] is null, use 0
                 metric: task["metric"] ?? "",
                 dateCompleted: task["dateCompleted"] ?? "",

@@ -26,6 +26,9 @@ class Task(Base):
     quantity = Column(Integer, nullable=True)
     metric = Column(String(50), nullable=True)
     taskDescription = Column(String(100), nullable=False)
+    rewardQuantity = Column(Integer, nullable=True)
+    rewardMetric = Column(String(100), nullable=True)
     rewardDescription = Column(String(100), nullable=False)
+    networkImage = Column(String(256))
 
     assignee = relationship("User", back_populates="tasks_assigned")

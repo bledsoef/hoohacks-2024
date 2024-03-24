@@ -6,6 +6,7 @@ mangum
 pygame
 python-dotenv
 pathlib
+requests
 openai
 firebase-admin
 google-cloud-storage

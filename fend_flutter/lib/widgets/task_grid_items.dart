@@ -6,7 +6,7 @@ import 'package:transparent_image/transparent_image.dart';
 class TaskGridItems extends StatelessWidget {
   const TaskGridItems({super.key, required this.task, required this.isExpired});
 
-  final Task task;
+  final GameTask task;
   final bool isExpired;
 
   @override
@@ -35,7 +35,7 @@ class CurrentList extends StatelessWidget {
     required this.task,
   });
 
-  final Task task;
+  final GameTask task;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class ExpiredList extends StatelessWidget {
     required this.task
   });
 
-  final Task task;
+  final GameTask task;
 
   @override
   Widget build(BuildContext context) {

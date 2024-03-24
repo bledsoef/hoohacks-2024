@@ -2,6 +2,8 @@ import 'package:fend_flutter/screens/game_tasks.dart';
 import 'package:fend_flutter/screens/tasks_overview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -12,7 +14,11 @@ final theme = ThemeData(
   textTheme: GoogleFonts.latoTextTheme(),
 );
 
-void main(){
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const App());
 }
 
