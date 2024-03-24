@@ -234,8 +234,6 @@ def open_skill_menu():
 	menu_bind_keys()
 
 def open_quest_menu():
-	print "Opening the quest menu"
-	# beanstodo: This procedure needs to be refined
 	g.load_quests()
 	open_inner_menu("quest")
 	g.cur_window = "inventory_quest"
@@ -775,9 +773,12 @@ def redeemreward(quantity, metric, task_id):
 	if response.status_code == 200:
 		player.give_stat(metric, quantity)
 		refresh_stat_display()
-		print "rewards redeemed successfully"
+		main.print_message("** Reward Redemption Successful **")
+		main.print_message("** Gained {} {} **".format(quantity, metric))
+		g.savegame(player.name)
 	else:
-		print "problem with reward redemption"
+		main.print_message("** problem with reward redemption **")
+	pygame.display.flip()
 	g.load_quests()
 
 
@@ -952,9 +953,9 @@ def skill_key_handler(key_name):
 	return tmp
 
 def quest_key_handler(key_name):
-	tmp = inner_key_handler(key_name)  # action is 2 and all other values don't mean anything
+	tmp = inner_key_handler(key_name)
 	if tmp == 2:
-		tmp2 = usequest()  # beanstodo do things here, mostly just a landmark
+		tmp2 = usequest() 
 	if tmp != 1: refresh_quest("quest")
 	return tmp
 
@@ -1062,7 +1063,7 @@ def quest_mouse_click(xy):
 	# beanstodo decouple this mouse movement with the little item cells that other menus use
 	tmp = inner_mouse_click(xy, "quest")
 	if tmp == 2:
-		tmp2 = useskill()  # interact with quest. this could be accepting a reward or accepting a quest
+		tmp2 = usequest()
 		if tmp2 == "end": return "end"
 	if tmp != 1: refresh_quest("quest")
 	return tmp
