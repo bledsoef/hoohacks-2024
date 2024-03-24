@@ -17,7 +17,7 @@ class GameTask {
   });
 
   final String gameName;
-  final int id;
+  final num id;
   final String title;
   final String taskDescription;
   final String rewardDescription;
@@ -25,9 +25,9 @@ class GameTask {
   final String expirationDate;
   final String status;
   final String dateCompleted;
-  final int quantity;
+  final num quantity;
   final String metric;
   final String category;
-  final double progress;
+  final num progress;
   final bool needsVerification;
 } 
