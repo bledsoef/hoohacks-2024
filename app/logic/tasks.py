@@ -57,6 +57,12 @@ def get_tasks_for_user(db: Session, username):
                 assigned_tasks[i]["progress"] = fitbit_information["kilometers"]
             elif assigned_tasks[i]["metric"] == "minutes of exercise":
                 assigned_tasks[i]["progress"] = fitbit_information["minutesExercising"]
+
+            if "progress" in assigned_tasks[i] and assigned_tasks[i]["progress"] >= assigned_tasks[i]["quantity"]:
+                assigned_tasks[i]["status"] = "Completed"
+                finished_task = db.query(Task).filter(Task.id == assigned_tasks[i]["id"]).first()
+                finished_task.status = "Completed"
+                db.commit()
  
         grouped_tasks[gameTitle] = {"assigned": assigned_tasks}
     
