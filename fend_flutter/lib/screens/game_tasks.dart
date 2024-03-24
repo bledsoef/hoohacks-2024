@@ -14,7 +14,7 @@ class GameTasksScreen extends StatelessWidget{
     List<dynamic> assignedTasks = gameData["assigned"];
     return Scaffold(
       appBar: AppBar(
-        title: const Text("GamesList"),
+        title: Text(gameName),
       ),
       body: GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -37,6 +37,7 @@ class GameTasksScreen extends StatelessWidget{
                 progress: 0, // Assuming progress can't be null based on your code
                 category: task["category"] ?? "",
               ),
+              isExpired: gameName == "Expired" ? true : false,
             )
       ],
       ),

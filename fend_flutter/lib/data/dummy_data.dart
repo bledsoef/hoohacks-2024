@@ -1,5 +1,4 @@
 // import 'package:fend_flutter/models/task.dart';
-
 // const kTitle = "APP NAME";
 
 // List gameNames = [ 
@@ -11,7 +10,8 @@
 // Map<String, List<Task>> taskLists = {
 //   "Super Smash Bros": smashBros,
 //   "Call of Duty": codTasks,
-//   "DOTA": dota
+//   "DOTA": dota,
+//   "Expired": expiredList
 // };
 
 // const codTasks = [
@@ -203,15 +203,16 @@
 // ];
 
 
+
 // const dota = [
 //   Task(
 //     gameName: "Call of Duty",
 //     title: 'Marathon mania',
-//     taskDescription: 'Run 50 miles',
-//     rewardDescription: '50 credit points',
+//     details: 'Run 50 miles',
+//     reward: '50 credit points',
 //     networkImage: "https://bnetcmsus-a.akamaihd.net/cms/blog_header/ti/TI4WAD6CJ4Y51691017340326.jpg",
 //     expirationDate: "24th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 50,
 //     metric: "miles",
@@ -221,11 +222,11 @@
 //   Task(
 //     gameName: "Call of Duty",
 //     title: 'Move your body',
-//     taskDescription: 'Dance for 30mins',
-//     rewardDescription: '20 credit points',
+//     details: 'Dance for 30mins',
+//     reward: '20 credit points',
 //     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXE7LUfmU4s3ooIuFUCjw0nlGBkOw61DNqnFZJJqys9g&s",
 //     expirationDate: "25th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 30,
 //     metric: "minutes",
@@ -235,11 +236,11 @@
 //   Task(
 //     gameName: "Call of Duty",
 //     title: "Reader's time",
-//     taskDescription: 'Read 10 pages of Pride and Prejudice',
-//     rewardDescription: '10 points',
+//     details: 'Read 10 pages of Pride and Prejudice',
+//     reward: '10 points',
 //     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbtDASBjQ4F7BJp-5k19S_-Ht8eWLZ0acAmQ&s",
 //     expirationDate: "24th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 10,
 //     metric: "pages",
@@ -249,11 +250,11 @@
 //   Task(
 //     gameName: "Call of Duty",
 //     title: 'Simp challenge',
-//     taskDescription: 'Flirt with the opposite sex',
-//     rewardDescription: 'Virtual temporary girlfriend/boyfriend',
+//     details: 'Flirt with the opposite sex',
+//     reward: 'Virtual temporary girlfriend/boyfriend',
 //     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTNWmjaNQddELp8jXIIaLINh4Icl_97gqbM7AalSPB9Q&s",
 //     expirationDate: "26th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 1,
 //     metric: "task",
@@ -263,11 +264,11 @@
 //   Task(
 //     gameName: "Call of Duty",
 //     title: 'Flight test',
-//     taskDescription: 'Jump from the 3rd floor',
-//     rewardDescription: "Pilot's suit",
+//     details: 'Jump from the 3rd floor',
+//     reward: "Pilot's suit",
 //     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoEyf6wfmdCXxmsU1dlC6Zgu7QS0LG75mT7w&s",
 //     expirationDate: "28th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 1,
 //     metric: "task",
@@ -277,15 +278,31 @@
 //   Task(
 //     gameName: "Call of Duty",
 //     title: 'Nerd',
-//     taskDescription: 'Play chess for 20mins',
-//     rewardDescription: "Nerdy glasses",
+//     details: 'Play chess for 20mins',
+//     reward: "Nerdy glasses",
 //     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFaVV4sOseOiCMxSt1gu1NrxQiZaPyUKGKISFEMu8mLg&s",
 //     expirationDate: "26th March",
-//     status: "Assigned",
+//     status: true,
 //     dateCompleted: "Not completed yet",
 //     quantity: 20,
 //     metric: "minutes",
 //     category: "Skill",
 //     progress: 14
 //   ),
+// ];
+
+// var expiredList = [ 
+//   dota[0],
+//   smashBros[1],
+//   smashBros[3],
+//   dota[4],
+//   smashBros[4],
+//   dota[5],
+//   codTasks[1],
+//   smashBros[0],
+//   dota[2],
+//   smashBros[2],
+//   codTasks[3],
+//   smashBros[5],
+//   smashBros[6],
 // ];
