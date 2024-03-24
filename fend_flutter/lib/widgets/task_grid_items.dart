@@ -1,17 +1,19 @@
 import 'package:fend_flutter/models/task.dart';
+import 'package:fend_flutter/screens/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class TaskGridCategory extends StatelessWidget {
-  const TaskGridCategory({super.key, required this.task, required this.onTap});
+  const TaskGridCategory({super.key, required this.task});
 
   final Task task;
-  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: ((context) => TasksScreen(task: task,))));
+      },
       splashColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(16),
       child: Container(
@@ -41,7 +43,7 @@ class TaskGridCategory extends StatelessWidget {
               bottom: 0,
               child: Container(
                 color: Colors.black54,
-                padding: EdgeInsets.all(2.0),
+                padding: const EdgeInsets.all(2.0),
                 child: Column(
                   children: [ 
                     Text( 
