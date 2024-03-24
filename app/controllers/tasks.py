@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from database.connection import get_db
-from app.logic.tasks import create_new_task, get_tasks_for_user
+from app.logic.tasks import create_new_task, get_tasks_for_user, get_fitbit_information
 from app.logic.vision import moderate_task
 from app.models.models import Task, User
 import datetime
@@ -40,39 +40,7 @@ async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
 
 @router.get("/getDailyFitbitInformation")
 async def getSteps():
-    header = {'Authorization': 'Bearer {}'.format(os.environ["ACCESS_TOKEN"])}
-    date = datetime.datetime.now().strftime("%Y-%m-%d")
-    activity_response = requests.get(f"https://api.fitbit.com/1/user/-/activities/date/{date}.json", headers=header).json()
-    sleep_response = requests.get(f"https://api.fitbit.com/1.2/user/-/sleep/date/{date}.json", headers=header).json()
-    summary = activity_response.get("summary", None)
-    steps = 0
-    kilometers = 0
-    minutesExercising = 0
-    if summary:
-        steps = summary.get("steps", 0)
-        distances = summary.get("distances", [])
-        if distances:
-            total = distances[0]
-            kilometers = total.get("distance", 0)
-        fairlyActiveMinutes = summary.get("fairlyActiveMinutes", 0)
-        veryActiveMinutes = summary.get("veryActiveMinutes", 0)
-        minutesExercising = fairlyActiveMinutes + veryActiveMinutes
-    sleep = sleep_response.get("sleep", [])
-    efficiency = 0
-    if sleep:
-        sleep_info = sleep[0]
-        efficiency = sleep_info.get("efficiency", 0)
-    sleep_summary = sleep_response.get("summary", None)
-    hoursAsleep = 0
-    if sleep_summary:
-        hoursAsleep = sleep_summary.get("totalMinutesAsleep", 0) / 60
-    return {
-        "steps": steps, 
-        "kilometers": kilometers, 
-        "minutesExercising": minutesExercising,
-        "sleepEfficiency": efficiency,
-        "hoursAsleep": hoursAsleep
-        }
+    return get_fitbit_information()
 
 @router.post("/updateTask")
 async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted: str = None, taskDescription: str = None, rewardDescription: str = None, db: Session = Depends(get_db)):
@@ -109,3 +77,6 @@ async def validateTask(request: Request, db: Session = Depends(get_db)):
     db.commit()
     return ""
 
+@router.get("/fitbit")
+async def verify():
+    return

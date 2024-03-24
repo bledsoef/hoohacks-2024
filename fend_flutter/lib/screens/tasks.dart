@@ -9,7 +9,6 @@ class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key, required this.task});
 
   final Task task;
-
   @override
   State<TasksScreen> createState() {
     return _TasksScreenState();
@@ -29,7 +28,6 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.task.networkImage);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.task.title),
@@ -113,52 +111,64 @@ class _TasksScreenState extends State<TasksScreen> {
             const SizedBox(
               height: 10,
             ),
-            Text(
-              "Progress",
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge!
-                  .copyWith(color: Theme.of(context).colorScheme.primary),
+            Visibility(
+              visible: !widget.task.needsVerification, // Only show the button if needsVerification is true
+              child:
+                  Text(
+                    "Progress",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(color: Theme.of(context).colorScheme.primary),
+                  )
             ),
             const SizedBox(
               height: 15,
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: LinearPercentIndicator(
-                percent: widget.task.progress / widget.task.quantity,
-                animation: true,
-                lineHeight: 40.0,
-                animationDuration: 1000,
-                linearStrokeCap: LinearStrokeCap.roundAll,
-                barRadius: const Radius.circular(16),
-                center: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          "${widget.task.progress} / ${widget.task.quantity}      "),
-                      Text(
-                          "${(widget.task.progress / widget.task.quantity) * 100}%"),
-                    ]),
-                backgroundColor:
-                    Colors.grey[300], // Light grey color for the unfilled part
-                progressColor:
-                    (widget.task.progress / widget.task.quantity) < 0.35
-                        ? Colors.red // Progress less than 35%
-                        : (widget.task.progress / widget.task.quantity) <= 0.75
-                            ? Colors.blue // Progress between 35% and 75%
-                            : Colors.green, // Progress more than 75%
-              ),
+            Visibility(
+              visible: !widget.task.needsVerification, // Only show the button if needsVerification is true
+              child: Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: LinearPercentIndicator(
+                  percent: widget.task.progress / widget.task.quantity,
+                  animation: true,
+                  lineHeight: 40.0,
+                  animationDuration: 1000,
+                  linearStrokeCap: LinearStrokeCap.roundAll,
+                  barRadius: const Radius.circular(16),
+                  center: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                            "${widget.task.progress} / ${widget.task.quantity}      "),
+                        Text(
+                            "${(widget.task.progress / widget.task.quantity) * 100}%"),
+                      ]),
+                  backgroundColor:
+                      Colors.grey[300], // Light grey color for the unfilled part
+                  progressColor:
+                      (widget.task.progress / widget.task.quantity) < 0.35
+                          ? Colors.red // Progress less than 35%
+                          : (widget.task.progress / widget.task.quantity) <= 0.75
+                              ? Colors.blue // Progress between 35% and 75%
+                              : Colors.green, // Progress more than 75%
+                ),
+              )
             ),
+            
             const SizedBox(
               height: 30,
             ),
-            ElevatedButton(
+            Visibility(
+              visible: widget.task.needsVerification, // Only show the button if needsVerification is true
+              child: ElevatedButton(
                 onPressed: () {
                   selectFile();
                 },
-                child: const Text("Upload proof"))
+                child: const Text("Upload proof")
+              ),
+            )
           ],
         ));
   }

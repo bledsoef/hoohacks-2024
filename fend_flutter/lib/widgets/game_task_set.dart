@@ -49,7 +49,7 @@ class GameTaskSets extends StatelessWidget {
                 width: MediaQuery.of(context).size.width /
                     3, // Card width
                 child: Card(
-                  color: Colors.pink[200],
+                  color: Colors.orange[400],
                   margin: const EdgeInsets.all(8.0),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
