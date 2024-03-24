@@ -1,5 +1,5 @@
-class Task {
-  const Task({
+class GameTask {
+  const GameTask({
     required this.gameName,
     required this.title,
     required this.details,

@@ -8,7 +8,7 @@ List gameNames = [
   "DOTA"
 ];
 
-Map<String, List<Task>> taskLists = {
+Map<String, List<GameTask>> taskLists = {
   "Super Smash Bros": smashBros,
   "Call of Duty": codTasks,
   "DOTA": dota,
@@ -16,7 +16,7 @@ Map<String, List<Task>> taskLists = {
 };
 
 const codTasks = [
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Marathon mania',
     details: 'Run 50 miles',
@@ -30,7 +30,7 @@ const codTasks = [
     category: "Health",
     progress: 42
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Move your body',
     details: 'Dance for 30mins',
@@ -44,7 +44,7 @@ const codTasks = [
     category: "Health",
     progress: 15
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: "Reader's time",
     details: 'Read 10 pages of Pride and Prejudice',
@@ -58,7 +58,7 @@ const codTasks = [
     category: "Education",
     progress: 2
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Simp challenge',
     details: 'Flirt with the opposite sex',
@@ -72,7 +72,7 @@ const codTasks = [
     category: "Social",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Flight test',
     details: 'Jump from the 3rd floor',
@@ -86,7 +86,7 @@ const codTasks = [
     category: "Strength",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Nerd',
     details: 'Play chess for 20mins',
@@ -103,7 +103,7 @@ const codTasks = [
 ];
 
 const smashBros = [
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Train to win',
     details: 'Run 50 miles',
@@ -117,7 +117,7 @@ const smashBros = [
     category: "Health",
     progress: 42
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Move your body',
     details: 'Dance for 30mins',
@@ -131,7 +131,7 @@ const smashBros = [
     category: "Health",
     progress: 15
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: "Reader's time",
     details: 'Read 10 pages of Pride and Prejudice',
@@ -145,7 +145,7 @@ const smashBros = [
     category: "Education",
     progress: 2
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Simp challenge',
     details: 'Take a selfie with someone new',
@@ -159,7 +159,7 @@ const smashBros = [
     category: "Social",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Flight test',
     details: 'Jump from the 40th floor',
@@ -173,7 +173,7 @@ const smashBros = [
     category: "Strength",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Nerd',
     details: 'Play chess for 20mins',
@@ -187,7 +187,7 @@ const smashBros = [
     category: "Skill",
     progress: 14
   ),
-  Task(
+  GameTask(
     gameName: "Super Smash Bros",
     title: 'Maria bros',
     details: 'Clean your vehicle for atleast 25mins',
@@ -205,7 +205,7 @@ const smashBros = [
 
 
 const dota = [
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Marathon mania',
     details: 'Run 50 miles',
@@ -219,7 +219,7 @@ const dota = [
     category: "Health",
     progress: 42
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Move your body',
     details: 'Dance for 30mins',
@@ -233,7 +233,7 @@ const dota = [
     category: "Health",
     progress: 15
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: "Reader's time",
     details: 'Read 10 pages of Pride and Prejudice',
@@ -247,7 +247,7 @@ const dota = [
     category: "Education",
     progress: 2
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Simp challenge',
     details: 'Flirt with the opposite sex',
@@ -261,7 +261,7 @@ const dota = [
     category: "Social",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Flight test',
     details: 'Jump from the 3rd floor',
@@ -275,7 +275,7 @@ const dota = [
     category: "Strength",
     progress: 0
   ),
-  Task(
+  GameTask(
     gameName: "Call of Duty",
     title: 'Nerd',
     details: 'Play chess for 20mins',

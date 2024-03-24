@@ -1,14 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:fend_flutter/models/task.dart';
+import 'package:fend_flutter/screens/tasks_overview.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:http/http.dart' as http;
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({super.key, required this.task});
 
-  final Task task;
+  final GameTask task;
 
   @override
   State<TasksScreen> createState() {
@@ -17,15 +21,75 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  void selectFile() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  FilePickerResult? result; 
 
-    if (result != null) {
-      File file = File(result.files.single.path!);
-    } else {
-      // User canceled the picker
+  Future<void> _apiRequest(id) async {
+    Map<String, dynamic> payloadData = {
+      'fileId': id,
+      'type': result!.files[0].name.split(".")[1],
+      'email': 'mckenz318@gmail.com',
+      'dateCreated': DateTime.now().toString(),
+    };
+    try {
+      final response = await http.post(
+        Uri.parse('http://127.0.0.1:8000/uploadFile'),
+        body: jsonEncode(payloadData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('API Response: ${response.body}'); 
+      } else {
+        print('API Error: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('API Error: $error');
     }
   }
+
+  Future<void> _uploadFiles() async {
+  if (result == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('No file selected'),
+      ),
+    );
+    return;
+  }
+
+  try {
+    for (var file in result!.files) {
+      String id = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
+      Reference storageReference = FirebaseStorage.instance.ref().child(
+          'resources/$id');
+
+      if (file.bytes != null) {
+        UploadTask uploadTask = storageReference.putData(file.bytes!);
+        await uploadTask.whenComplete(() => null);
+      } 
+      else {
+        UploadTask uploadTask = storageReference.putFile(File(file.path!));
+        await uploadTask.whenComplete(() => null);
+      }
+      _apiRequest(id);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Files Uploaded Successfully'),
+      ),
+    );
+    Navigator.of(context).push(MaterialPageRoute(builder: ((context) => TasksOverview())));
+  } catch (e) {
+    print(e.toString());
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Error uploading files'),
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -154,10 +218,28 @@ class _TasksScreenState extends State<TasksScreen> {
               height: 30,
             ),
             ElevatedButton(
-                onPressed: () {
-                  selectFile();
+                // onPressed: () {
+                //   selectFile();
+                // },
+                onPressed: () async{
+                  result = await FilePicker.platform.pickFiles(allowMultiple: false);
+                  if (result == null) {
+                      print("No file selected");
+                    } else {
+                      setState(() {});
+                      for (var element in result!.files) {
+                        print(element.name);
+                      }
+                    }
                 },
-                child: const Text("Upload proof"))
+                child: const Text("Upload proof"),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _uploadFiles,
+                child: const Text("Upload Files to Firebase Storage"),
+              ),
+
           ],
         ));
   }
