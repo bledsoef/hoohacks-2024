@@ -27,5 +27,6 @@ class Task(Base):
     metric = Column(String(50), nullable=True)
     taskDescription = Column(String(100), nullable=False)
     rewardDescription = Column(String(100), nullable=False)
+    networkImage = Column(String(256))
 
     assignee = relationship("User", back_populates="tasks_assigned")
