@@ -28,11 +28,12 @@ async def createTask(request: Request, db: Session = Depends(get_db)):
 
 @router.get("/getTasksForUser")
 async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
-    try:        
+    try:
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None
-        completed, expired, assigned = get_tasks_for_user(db, username)
-        return {"completed": completed, "expired": expired, "assigned": assigned}
+        
+        grouped_tasks = get_tasks_for_user(db, username)
+        return grouped_tasks
     except Exception as e:
         print(e)
         raise HTTPException(status_code=400, detail="Invalid username")
@@ -117,13 +118,13 @@ async def validateTask(request: Request, db: Session = Depends(get_db)):
     if not taskToVerify:
         return "Invalid task"
     
-    verificationStatus = moderate_task(db, data["file_location"], taskToVerify.taskDescription)
+    verificationStatus = moderate_task(data["file_location"], taskToVerify.taskDescription)
     if verificationStatus == "YES":
         taskToVerify.status = "Completed"
     elif verificationStatus == "NO":
         taskToVerify.status = "Assigned"
     else:
-        taskToVerify.status = "Needs Manual Moderation"
+        taskToVerify.status = "Needs Manual Verification"
     db.commit()
-    return 
+    return ""
 
