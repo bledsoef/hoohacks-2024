@@ -232,6 +232,35 @@ def open_skill_menu():
 				return
 	menu_bind_keys()
 
+def open_quest_menu():
+	print "Opening the quest menu"
+	# beanstodo: This is stolen and unpersonalized code
+	open_inner_menu("quest")
+	g.cur_window = "inventory_quest"
+	refresh_quest("quest")
+	refresh_quest_buttons()
+	while 1:
+		pygame.time.wait(30)
+		g.clock.tick(30)
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT: return
+			elif event.type == pygame.KEYDOWN:
+				tmp = quest_key_handler(event.key)
+				if tmp == 1:
+					return
+				elif tmp == "end":
+					return "end"
+			elif event.type == pygame.MOUSEMOTION:
+				quest_mouse_move(event.pos)
+			elif event.type == pygame.MOUSEBUTTONDOWN:
+				if quest_mouse_click(event.pos) == 1:
+					return
+		tmpjoy=g.run_joystick()
+		if tmpjoy != 0:
+			if skill_key_handler(tmpjoy) == 1:
+				return
+	menu_bind_keys()
+
 #Generic function for creating a sub-menu for the inv.
 def open_inner_menu(screen_str):
 	global inner_cur_button; inner_cur_button = 0
@@ -421,6 +450,11 @@ def refresh_skill(screen_str):
 		tmp_menu_y_base+tmp_menu_height+1))
 
 	pygame.display.flip()
+
+def refresh_quest(screen_str):
+	# beanstodo: fill this with refresh content for the menu filled with quests
+	pygame.display.flip()
+
 
 
 def leave_inner():
@@ -792,9 +826,7 @@ def menu_key_handler(key_name):
 		elif (cur_button == 4):
 			inv_savegame()
 			return 0
-		elif (cur_button == 5): # beans
-			print("Opening the quest menu") # beanstodo: open the quest menu
-			return 0
+		elif (cur_button == 5): open_quest_menu() # beans
 		elif (cur_button == 6):
 			leave_inv()
 			return 1
@@ -847,6 +879,13 @@ def skill_key_handler(key_name):
 		tmp2 = useskill()
 		if tmp2 == "end": return "end"
 	if tmp != 1: refresh_skill("skill")
+	return tmp
+
+def quest_key_handler(key_name):
+	tmp = inner_key_handler(key_name)  # action is 2 and all other values don't mean anything
+	if tmp == 2:
+		tmp2 = useskill()  # beanstodo write something that collects rewards for the quest 
+	if tmp != 1: refresh_quest("quest")
 	return tmp
 
 #I have to do this separate, as the equip screen has an extra display.
@@ -942,6 +981,15 @@ def drop_mouse_click(xy):
 	return tmp
 
 def skill_mouse_click(xy):
+	tmp = inner_mouse_click(xy, "skill")
+	if tmp == 2:
+		tmp2 = useskill()
+		if tmp2 == "end": return "end"
+	if tmp != 1: refresh_skill("skill")
+	return tmp
+
+def quest_mouse_click(xy):
+	# beanstodo decouple this mouse movement with the little item cells that other menus use
 	tmp = inner_mouse_click(xy, "skill")
 	if tmp == 2:
 		tmp2 = useskill()
@@ -1092,6 +1140,10 @@ def equip_mouse_move(xy):
 def skill_mouse_move(xy):
 	if inner_mouse_move(xy, "skill"):
 		refresh_skill_buttons()
+
+def quest_mouse_move(xy):
+	if inner_mouse_move(xy, "quest"):
+		refresh_quest_buttons()
 
 #This creates the inv area within the map canvas.
 def init_window_inv():
