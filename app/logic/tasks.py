@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session, aliased
+from sqlalchemy import or_, and_, func
 from app.models.models import User, Task
 from datetime import datetime
 def create_new_task(db: Session, request_data):
@@ -21,7 +22,17 @@ def create_new_task(db: Session, request_data):
 def get_tasks_for_user(db: Session, username):
     completed_query = db.query(Task).filter(Task.user==username, Task.status=="Completed").all()
     completed_tasks = [task.__dict__ for task in completed_query]
-    assigned_query = db.query(Task).filter(Task.user==username, Task.status=="Assigned")
+    assigned_query = db.query(Task).filter(
+        Task.user == username,
+        Task.status == "Assigned",
+        or_(
+            Task.expirationDate.is_(None),
+            and_(
+                Task.expirationDate != None,
+                Task.expirationDate >= func.now()
+            )
+        )
+    )
     assigned_tasks = [task.__dict__ for task in assigned_query]
     expired_query = db.query(Task).filter(Task.user==username, Task.status=="Assigned", Task.expirationDate and Task.expirationDate < datetime.now())
     expired_tasks = [task.__dict__ for task in expired_query]
