@@ -784,9 +784,11 @@ def load_quests():
 	params = {"username": player.name}
 	response = requests.get(url, params=params)
 	if response.status_code == 200:
-		quest_data = response.json()["Dragon Hunt"]
-		completed_quests = quest_data['completed']
-		assigned_quests = quest_data['assigned']
+		response_data = response.json()
+		assigned_quests = [task for task in response_data[u'Dragon Hunt'][u'assigned']]
+		all_past_quests = [task for task in response_data[u'Past Tasks'][u'assigned']]
+		
+		completed_quests = [quest for quest in all_past_quests if (quest[u'gameTitle']==u'Dragon Hunt' and str(quest[u'status']).lower()=='completed')]
 		quest_list = (completed_quests + assigned_quests)[:4]
 	else:
 		print "Could not load quests"
