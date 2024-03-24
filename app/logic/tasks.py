@@ -33,10 +33,9 @@ def get_tasks_for_user(db: Session, username):
     all_tasks = db.query(Task).filter(Task.user==username).all()
     for task in all_tasks:
         gameTitles.add(task.gameTitle)
+    gameTitles.add("Past Tasks")
     grouped_tasks = {}
     for gameTitle in list(gameTitles):
-        completed_query = db.query(Task).filter(Task.user==username, Task.gameTitle==gameTitle, Task.status=="Completed").all()
-        completed_tasks = [task.__dict__ for task in completed_query]
         assigned_query = db.query(Task).filter(
             Task.user == username,
             Task.gameTitle==gameTitle,
@@ -57,9 +56,14 @@ def get_tasks_for_user(db: Session, username):
                 assigned_tasks[i]["progress"] = fitbit_information["kilometers"] * 0.6214
             elif assigned_tasks[i]["metric"] == "minutes of exercise":
                 assigned_tasks[i]["progress"] = fitbit_information["minutesExercising"]
-        expired_query = db.query(Task).filter(Task.user==username, Task.gameTitle==gameTitle, Task.status=="Assigned", Task.expirationDate and Task.expirationDate < datetime.now())
-        expired_tasks = [task.__dict__ for task in expired_query]
-        grouped_tasks[gameTitle] = {"completed": completed_tasks, "assigned": assigned_tasks, "expired": expired_tasks}
+ 
+        grouped_tasks[gameTitle] = {"assigned": assigned_tasks}
+    
+    expired_query = db.query(Task).filter(Task.user==username, Task.status=="Assigned", Task.expirationDate and Task.expirationDate < datetime.now())
+    expired_tasks = [task.__dict__ for task in expired_query]
+    completed_query = db.query(Task).filter(Task.user==username, Task.status=="Completed").all()
+    completed_tasks = [task.__dict__ for task in completed_query]
+    grouped_tasks["Past Tasks"] = {"assigned":expired_tasks + completed_tasks}
     return grouped_tasks
 
 def get_fitbit_information():
