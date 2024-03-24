@@ -18,6 +18,7 @@ class Task(Base):
     id = Column(Integer, primary_key=True, index=True)
     user = Column(String(50), ForeignKey("users.username"))
     title = Column(String(50))
+    gameTitle = Column(String(50), nullable=False)
     status = Column(String(50), nullable=False)
     dateCompleted = Column(Date, nullable=True)
     expirationDate = Column(Date)

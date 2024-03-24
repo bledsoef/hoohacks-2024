@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class GameTasksScreen extends StatelessWidget{
 
-  const GameTasksScreen({super.key, required this.gameName});
+  const GameTasksScreen({super.key, required this.gameName, required this.gameData});
 
   final String gameName;
-
+  final Map<String, dynamic> gameData;
   @override
   Widget build(BuildContext context){
-
+    List<dynamic> assignedTasks = gameData["assigned"];
     return Scaffold(
       appBar: AppBar(
         title: const Text("GamesList"),
@@ -21,11 +21,24 @@ class GameTasksScreen extends StatelessWidget{
             crossAxisCount: 2,
           ),
         children: [
-          for (final category in taskLists[gameName]!)
+          for (final task in assignedTasks!)
             TaskGridItems(
-              task: category,
+              task: Task(
+                gameName: gameName,
+                title: task["title"] ?? "", // If task["title"] is null, use an empty string
+                taskDescription: task["taskDescription"] ?? "",
+                rewardDescription: task["rewardDescription"] ?? "",
+                status: task["status"] ?? "",
+                networkImage: "", // Assuming you want an empty string if this is null, no need for conditional handling
+                quantity: task["quantity"] ?? 0, // If task["quantity"] is null, use 0
+                metric: task["metric"] ?? "",
+                dateCompleted: task["dateCompleted"] ?? "",
+                expirationDate: task["expirationDate"] ?? "",
+                progress: 0, // Assuming progress can't be null based on your code
+                category: task["category"] ?? "",
+              ),
             )
-        ],
+      ],
       ),
     );
   }

@@ -27,12 +27,13 @@ async def createTask(request: Request, db: Session = Depends(get_db)):
     
 
 @router.get("/getTasksForUser")
-async def getSentRecsForUser(username: str = None, db: Session = Depends(get_db)):
-    try:        
+async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
+    try:
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None
-        completed, expired, assigned = get_tasks_for_user(db, username)
-        return {"completed": completed, "expired": expired, "assigned": assigned}
+        
+        grouped_tasks = get_tasks_for_user(db, username)
+        return grouped_tasks
     except Exception as e:
         print(e)
         return {"message": "Failed to get recs"}    

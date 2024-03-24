@@ -44,7 +44,7 @@ class TaskGridItems extends StatelessWidget {
                 child: Column(
                   children: [ 
                     Text( 
-                      "Task: ${task.details}",
+                      "Task: ${task.taskDescription}",
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       softWrap: true,
@@ -57,7 +57,7 @@ class TaskGridItems extends StatelessWidget {
                     ),
                     
                     Text( 
-                      "Reward: ${task.reward}",
+                      "Reward: ${task.rewardDescription}",
                       maxLines: 2,
                       textAlign: TextAlign.center,
                       softWrap: true,

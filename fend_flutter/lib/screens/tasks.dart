@@ -53,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   .bodyLarge!
                   .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
-            Text(widget.task.details,
+            Text(widget.task.taskDescription,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground)),
             const SizedBox(
@@ -67,7 +67,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   .copyWith(color: Theme.of(context).colorScheme.primary),
             ),
             Text(
-              widget.task.reward,
+              widget.task.rewardDescription,
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
