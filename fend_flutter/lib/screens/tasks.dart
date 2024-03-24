@@ -21,7 +21,7 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  FilePickerResult? result; 
+  FilePickerResult? result;
 
   Future<void> _apiRequest(id) async {
     Map<String, dynamic> payloadData = {
@@ -30,66 +30,68 @@ class _TasksScreenState extends State<TasksScreen> {
       'email': 'mckenz318@gmail.com',
       'dateCreated': DateTime.now().toString(),
     };
-    try {
-      final response = await http.post(
-        Uri.parse('http://127.0.0.1:8000/uploadFile'),
-        body: jsonEncode(payloadData),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        print('API Response: ${response.body}'); 
-      } else {
-        print('API Error: ${response.statusCode}');
-      }
-    } catch (error) {
-      print('API Error: $error');
-    }
   }
 
   Future<void> _uploadFiles() async {
-  if (result == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('No file selected'),
-      ),
-    );
-    return;
-  }
-
-  try {
-    for (var file in result!.files) {
-      String id = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
-      Reference storageReference = FirebaseStorage.instance.ref().child(
-          'resources/$id');
-
-      if (file.bytes != null) {
-        UploadTask uploadTask = storageReference.putData(file.bytes!);
-        await uploadTask.whenComplete(() => null);
-      } 
-      else {
-        UploadTask uploadTask = storageReference.putFile(File(file.path!));
-        await uploadTask.whenComplete(() => null);
-      }
-      _apiRequest(id);
+    if (result == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No file selected'),
+        ),
+      );
+      return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Files Uploaded Successfully'),
-      ),
-    );
-    Navigator.of(context).push(MaterialPageRoute(builder: ((context) => TasksOverview())));
-  } catch (e) {
-    print(e.toString());
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Error uploading files'),
-      ),
-    );
+
+    try {
+      for (var file in result!.files) {
+        String id = '${DateTime.now().millisecondsSinceEpoch}_${file.name}';
+        Reference storageReference =
+            FirebaseStorage.instance.ref().child('$id');
+        try {
+          final response = await http.post(
+            Uri.parse('http://127.0.0.1:8000/validateTask'),
+            body: jsonEncode({
+              "file_location": "$id",
+              "task_id": widget.task.id
+            }),
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          );
+
+          if (response.statusCode == 200) {
+            print('API Response: ${response.body}');
+          } else {
+            print('API Error: ${response.statusCode}');
+          }
+        } catch (error) {
+          print('API Error: $error');
+        }
+        if (file.bytes != null) {
+          UploadTask uploadTask = storageReference.putData(file.bytes!);
+          await uploadTask.whenComplete(() => null);
+        } else {
+          UploadTask uploadTask = storageReference.putFile(File(file.path!));
+          await uploadTask.whenComplete(() => null);
+        }
+        _apiRequest(id);
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Files Uploaded Successfully'),
+        ),
+      );
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: ((context) => TasksOverview())));
+    } catch (e) {
+      print(e.toString());
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Error uploading files'),
+        ),
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
