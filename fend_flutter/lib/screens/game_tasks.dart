@@ -1,4 +1,3 @@
-import 'package:fend_flutter/data/dummy_data.dart';
 import 'package:fend_flutter/models/task.dart';
 import 'package:fend_flutter/widgets/task_grid_items.dart';
 import 'package:flutter/material.dart';
