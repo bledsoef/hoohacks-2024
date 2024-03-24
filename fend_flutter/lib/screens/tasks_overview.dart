@@ -1,13 +1,8 @@
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
-import 'package:fend_flutter/data/dummy_data.dart';
-import 'package:fend_flutter/screens/game_tasks.dart';
 import 'package:fend_flutter/widgets/game_task_set.dart';
 import 'package:fend_flutter/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class TasksOverview extends StatefulWidget {
   @override
