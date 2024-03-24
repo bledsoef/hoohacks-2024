@@ -1,11 +1,20 @@
 from openai import OpenAI
 from pathlib import Path
 import dotenv
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import storage
+import datetime
+
 env_path = Path('.') / '.env'
 dotenv.load_dotenv()
+cred = credentials.Certificate('service_account.json')
+firebase_admin.initialize_app(cred)
 def moderate_task(fileLocation, taskDescription):
+    bucket = storage.bucket("hoohacks2024-62aa0.appspot.com")
+    file_ref = bucket.blob(fileLocation)
+    download_url = file_ref.generate_signed_url(expiration=datetime.timedelta(seconds=3600))
     client = OpenAI()
-
     response = client.chat.completions.create(
     model="gpt-4-vision-preview",
     messages=[
@@ -22,7 +31,7 @@ def moderate_task(fileLocation, taskDescription):
             {
             "type": "image_url",
             "image_url": {
-                "url": fileLocation,
+                "url": download_url,
             },
             },
         ],
@@ -30,5 +39,5 @@ def moderate_task(fileLocation, taskDescription):
     ],
     max_tokens=300,
     )
-
+    print(response.choices[0].message.content)
     return response.choices[0].message.content

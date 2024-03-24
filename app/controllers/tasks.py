@@ -98,13 +98,13 @@ async def validateTask(request: Request, db: Session = Depends(get_db)):
     if not taskToVerify:
         return "Invalid task"
     
-    verificationStatus = moderate_task(db, data["file_location"], taskToVerify.taskDescription)
+    verificationStatus = moderate_task(data["file_location"], taskToVerify.taskDescription)
     if verificationStatus == "YES":
         taskToVerify.status = "Completed"
     elif verificationStatus == "NO":
         taskToVerify.status = "Assigned"
     else:
-        taskToVerify.status = "Needs Manual Moderation"
+        taskToVerify.status = "Needs Manual Verification"
     db.commit()
-    return 
+    return ""
 

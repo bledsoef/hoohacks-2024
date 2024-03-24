@@ -7,3 +7,6 @@ pygame
 python-dotenv
 pathlib
 openai
+firebase-admin
+google-cloud-storage
+firebase
