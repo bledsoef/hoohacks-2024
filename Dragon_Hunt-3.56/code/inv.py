@@ -380,6 +380,7 @@ def refresh_equip():
 
 def refresh_inv_display(screen_str):
 	#Draw a selection box around the current item.
+
 	x = tmp_x_base
 	y = tmp_y_base
 	for i in range(len(item.inv)):
@@ -459,6 +460,22 @@ def refresh_quest(screen_str):
 	curr_quest = curr_item // 8
 	print curr_quest
 	print g.quest_list
+
+	# clear the background
+	g.create_norm_box((tmp_menu_x_base,
+		tmp_menu_y_base+tmp_menu_height), (tmp_menu_width, 17))
+	
+	# count the number of quests and put boxes in the menu
+	quest_height = g.buttons['quest_item.png'].get_height() - 2
+	for i in range(len(g.quest_list)):
+		quest_item_picture = 'quest_item.png'
+		if i == curr_quest: quest_item_picture = 'quest_item_sel.png'
+		g.screen.blit(g.buttons[quest_item_picture], (base_x-60, base_y + (i * quest_height)+2))
+
+	pygame.display.flip()
+
+	# put the quest text into the boxes
+
 
 
 	pygame.display.flip()
@@ -847,25 +864,26 @@ def menu_key_handler(key_name):
 def inner_key_handler(key_name):
 	global cur_button
 	global curr_item
+	quest_icon_count = len(g.quest_list)
 	if (key_name == g.bindings["cancel"]):
 		#leave_inner()
 		return 1
 	elif (key_name == g.bindings["right"]):
-		curr_item += 1
-		if curr_item >= inv_width * inv_height:
-			curr_item -= inv_width * inv_height
+		curr_item += 1 if g.cur_window != 'inventory_quest' else 8
+		if curr_item >= ((inv_width * inv_height) if g.cur_window != 'inventory_quest' else inv_width * 2 * quest_icon_count):
+			curr_item = 0
 	elif (key_name == g.bindings["left"]):
-		curr_item -= 1
+		curr_item -= 1 if g.cur_window != 'inventory_quest' else 8
 		if curr_item < 0:
-			curr_item += inv_width * inv_height
+			curr_item = (inv_width * inv_height - 1) if g.cur_window != 'inventory_quest' else quest_icon_count * 8 - 1
 	elif (key_name == g.bindings["up"]):
-		curr_item = curr_item - inv_width
+		curr_item -= (inv_width) if g.cur_window != 'inventory_quest' else inv_width * 2
 		if curr_item < 0:
-			curr_item += inv_width * inv_height
+			curr_item = (inv_width * inv_height - 1) if g.cur_window != 'inventory_quest' else quest_icon_count * 8 - 1
 	elif (key_name == g.bindings["down"]):
-		curr_item = curr_item + inv_width
-		if curr_item >= inv_width * inv_height:
-			curr_item -= inv_width * inv_height
+		curr_item += (inv_width) if g.cur_window != 'inventory_quest' else inv_width * 2
+		if curr_item >= ((inv_width * inv_height) if g.cur_window != 'inventory_quest' else inv_width * 2 * quest_icon_count):
+			curr_item = 0
 	elif (key_name == g.bindings["action"]):
 		return 2
 	return 0

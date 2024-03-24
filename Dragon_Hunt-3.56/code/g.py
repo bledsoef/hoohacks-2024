@@ -788,7 +788,7 @@ def load_quests():
 		quest_list = response.json()
 	else:
 		print "Could not load quests"
-		print response
+		quest_list = []
 
 		
 

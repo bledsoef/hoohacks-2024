@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from database.connection import get_db
 from app.logic.tasks import create_new_task
@@ -34,7 +34,7 @@ async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
         return tasksForUser
     except Exception as e:
         print(e)
-        return {"message": "Failed to get recs"}    
+        raise HTTPException(status_code=400, detail="Invalid username")
 
 @router.get("/getDailyFitbitInformation")
 async def getSteps():
