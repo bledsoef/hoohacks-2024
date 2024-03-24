@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, Request, HTTPException
 from sqlalchemy.orm import Session
 from database.connection import get_db
-from app.logic.tasks import create_new_task
+from app.logic.tasks import create_new_task, get_tasks_for_user
+from app.logic.vision import moderate_task
 from app.models.models import Task, User
 import datetime
 from typing import Union
@@ -30,8 +31,8 @@ async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
     try:        
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None
-        tasksForUser = [task.__dict__ for task in db.query(Task).filter(Task.user == username).all()]
-        return tasksForUser
+        completed, expired, assigned = get_tasks_for_user(db, username)
+        return {"completed": completed, "expired": expired, "assigned": assigned}
     except Exception as e:
         print(e)
         raise HTTPException(status_code=400, detail="Invalid username")
@@ -108,3 +109,21 @@ async def redeemTask(task_id: Union[int, str], db: Session = Depends(get_db)):
     except Exception as e:
         print(e)
         return {"message": "Failed to redeem task"}
+
+@router.post("/validateTask")
+async def validateTask(request: Request, db: Session = Depends(get_db)):
+    data = await request.json()
+    taskToVerify = db.query(Task).filter(Task.id == data["task_id"]).first()
+    if not taskToVerify:
+        return "Invalid task"
+    
+    verificationStatus = moderate_task(db, data["file_location"], taskToVerify.taskDescription)
+    if verificationStatus == "YES":
+        taskToVerify.status = "Completed"
+    elif verificationStatus == "NO":
+        taskToVerify.status = "Assigned"
+    else:
+        taskToVerify.status = "Needs Manual Moderation"
+    db.commit()
+    return 
+

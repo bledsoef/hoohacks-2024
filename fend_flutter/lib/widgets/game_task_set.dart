@@ -32,7 +32,7 @@ class GameTaskSets extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
-                          GameTasksScreen(task: gameName)));
+                          GameTasksScreen(gameName: gameName)));
                 },
                 child: Text(
                   "View all",

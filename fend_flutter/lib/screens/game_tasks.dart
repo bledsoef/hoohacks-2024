@@ -5,27 +5,26 @@ import 'package:flutter/material.dart';
 
 class GameTasksScreen extends StatelessWidget{
 
-  const GameTasksScreen({super.key, required this.task});
+  const GameTasksScreen({super.key, required this.gameName});
 
-  final String task;
+  final String gameName;
 
   @override
   Widget build(BuildContext context){
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("GamesList"),
+        title: Text(gameName),
       ),
       body: GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            // childAspectRatio: 3 / 2,
-            // crossAxisSpacing: 20,
-            // mainAxisSpacing: 20,
           ),
         children: [
-          for (final category in codTasks)
-            TaskGridCategory(
+          for (final category in taskLists[gameName]!)
+            TaskGridItems(
               task: category,
+              isExpired: gameName == "Expired" ? true : false,
             )
         ],
       ),
