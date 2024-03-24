@@ -26,7 +26,7 @@ async def createTask(request: Request, db: Session = Depends(get_db)):
     
 
 @router.get("/getTasksForUser")
-async def getSentRecsForUser(username: str = None, db: Session = Depends(get_db)):
+async def getTasksForUser(username: str = None, db: Session = Depends(get_db)):
     try:        
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None

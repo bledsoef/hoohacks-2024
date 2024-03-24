@@ -43,6 +43,7 @@ equip_size = 3
 #Currently selected item number. If this is higher than the inventory can hold,
 #it represents a position within the equipment display.
 curr_item = 0
+curr_quest = 0
 
 
 global active_button
@@ -234,7 +235,8 @@ def open_skill_menu():
 
 def open_quest_menu():
 	print "Opening the quest menu"
-	# beanstodo: This is stolen and unpersonalized code
+	# beanstodo: This procedure needs to be refined
+	g.load_quests()
 	open_inner_menu("quest")
 	g.cur_window = "inventory_quest"
 	refresh_quest("quest")
@@ -453,6 +455,12 @@ def refresh_skill(screen_str):
 
 def refresh_quest(screen_str):
 	# beanstodo: fill this with refresh content for the menu filled with quests
+	# The actual quests that are assigned
+	curr_quest = curr_item // 8
+	print curr_quest
+	print g.quest_list
+
+
 	pygame.display.flip()
 
 
@@ -496,6 +504,7 @@ def refresh_stat_display():
 # 		bar_start+bar_height*2+1, fill="#2525EE", tags=("stats", "inv"))
 # 	main.canvas_map.lift("bar")
 
+	# beansstats, these are the stat displays
 	tmp_width = 52
 	g.screen.fill(g.colors["light_gray"], (start_x + tmp_width,
 		(g.tilesize*main.mapsizey - total_height)/2+5, 50, 14))
@@ -990,11 +999,11 @@ def skill_mouse_click(xy):
 
 def quest_mouse_click(xy):
 	# beanstodo decouple this mouse movement with the little item cells that other menus use
-	tmp = inner_mouse_click(xy, "skill")
+	tmp = inner_mouse_click(xy, "quest")
 	if tmp == 2:
-		tmp2 = useskill()
+		tmp2 = useskill()  # interact with quest. this could be accepting a reward or accepting a quest
 		if tmp2 == "end": return "end"
-	if tmp != 1: refresh_skill("skill")
+	if tmp != 1: refresh_quest("quest")
 	return tmp
 
 def equip_mouse_click(xy):
@@ -1076,22 +1085,23 @@ def skill_mouse_dbl_click(xy):
 #the inv box) and returns the selected box, or -1 for none. temp_size is
 #the width of the inventory box.
 def which_box(x, y, temp_size):
+	print g.cur_window
 	#Check for the left border
 	if x < 3: return -1
 	#Transform x from pixels to tiles
 	tempx = x - 3
 	likelyx = tempx / (g.tilesize + 2)
 	tempx = tempx - (likelyx * (g.tilesize + 2))
-	if tempx >= g.tilesize - 1: return -1
+	if tempx >= g.tilesize - 1 and g.cur_window != "inventory_quest": return -1
 
 
 	#Check for the top border
-	if y < 3: return -1
+	if y < 3 and g.cur_window != "inventory_quest": return -1
 	#Transform y from pixels to tiles
 	tempy = y - 3
 	likelyy = tempy / (g.tilesize + 2)
 	tempy = tempy - (likelyy * (g.tilesize + 2))
-	if tempy >= g.tilesize - 1: return -1
+	if tempy >= g.tilesize - 1 and g.cur_window != "inventory_quest": return -1
 	#Final check, then return the location in the inv.
 	if likelyy * temp_size + likelyx >= temp_size * inv_height: return -1
 	if likelyx >= temp_size: return -1

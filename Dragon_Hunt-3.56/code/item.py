@@ -51,7 +51,7 @@ class item_class:
 #An array of numbers, which are either the index of the
 #item in the item[] array, or -1 for empty.
 inv = []
-for x in range(28):
+for x in range(32):
 	inv.append(-1)
 
 #takes the index in the item[] array, and returns the index

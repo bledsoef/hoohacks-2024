@@ -1,6 +1,6 @@
 #Various data about the module.
 game_name=Dark Ages 1.01
-default_player_name=Alfred
+default_player_name=bledsoef
 hp=10d1
 ep=2d1
 attack=2d1

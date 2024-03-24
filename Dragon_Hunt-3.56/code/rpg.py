@@ -23,12 +23,8 @@
 #from Tkinter import *
 import pygame
 
-# # Beans
-# import requests
-# url = "http://127.0.0.1:8000/getTasksForUser"
-# params = {"username": "bledsoef"}
-# response = requests.get(url, params=params)
-# print(response.json())
+
+
 
 try:
 	import psyco
