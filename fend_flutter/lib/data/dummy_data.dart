@@ -2,6 +2,12 @@ import 'package:fend_flutter/models/task.dart';
 
 const kTitle = "APP NAME";
 
+List gameNames = [ 
+  "Call of Duty",
+  "Valorant",
+  "DOTA"
+];
+
 const codTasks = [
   Task(
     title: 'Marathon mania',
