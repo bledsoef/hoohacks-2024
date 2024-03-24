@@ -1,6 +1,7 @@
 class GameTask {
   const GameTask({
     required this.gameName,
+    required this.id,
     required this.title,
     required this.taskDescription,
     required this.rewardDescription,
@@ -15,6 +16,7 @@ class GameTask {
   });
 
   final String gameName;
+  final int id;
   final String title;
   final String taskDescription;
   final String rewardDescription;

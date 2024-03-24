@@ -14,6 +14,7 @@ def moderate_task(fileLocation, taskDescription):
     bucket = storage.bucket("hoohacks2024-62aa0.appspot.com")
     file_ref = bucket.blob(fileLocation)
     download_url = file_ref.generate_signed_url(expiration=datetime.timedelta(seconds=3600))
+    print(download_url)
     client = OpenAI()
     response = client.chat.completions.create(
     model="gpt-4-vision-preview",

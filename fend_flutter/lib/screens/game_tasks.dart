@@ -25,6 +25,7 @@ class GameTasksScreen extends StatelessWidget{
             TaskGridItems(
               task: GameTask(
                 gameName: gameName,
+                id: task["id"] ?? "",
                 title: task["title"] ?? "", // If task["title"] is null, use an empty string
                 taskDescription: task["taskDescription"] ?? "",
                 rewardDescription: task["rewardDescription"] ?? "",

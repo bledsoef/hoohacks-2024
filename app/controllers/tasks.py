@@ -95,6 +95,7 @@ async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted
 @router.post("/validateTask")
 async def validateTask(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
+    print(data)
     taskToVerify = db.query(Task).filter(Task.id == data["task_id"]).first()
     if not taskToVerify:
         return "Invalid task"
