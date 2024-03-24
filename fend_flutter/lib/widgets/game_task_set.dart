@@ -58,7 +58,7 @@ class GameTaskSets extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          "Task",
+                          task["title"],
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 12,

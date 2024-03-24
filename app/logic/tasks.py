@@ -33,9 +33,10 @@ def get_tasks_for_user(db: Session, username):
     all_tasks = db.query(Task).filter(Task.user==username).all()
     for task in all_tasks:
         gameTitles.add(task.gameTitle)
-    gameTitles.add("Past Tasks")
     grouped_tasks = {}
-    for gameTitle in list(gameTitles):
+    gameTitlesList = list(gameTitles)
+    gameTitlesList.append("Past Tasks")
+    for gameTitle in gameTitlesList:
         assigned_query = db.query(Task).filter(
             Task.user == username,
             Task.gameTitle==gameTitle,
@@ -53,7 +54,7 @@ def get_tasks_for_user(db: Session, username):
             if assigned_tasks[i]["metric"] == "steps":
                 assigned_tasks[i]["progress"] = fitbit_information["steps"]
             elif assigned_tasks[i]["metric"] == "miles":
-                assigned_tasks[i]["progress"] = fitbit_information["kilometers"] * 0.6214
+                assigned_tasks[i]["progress"] = fitbit_information["kilometers"]
             elif assigned_tasks[i]["metric"] == "minutes of exercise":
                 assigned_tasks[i]["progress"] = fitbit_information["minutesExercising"]
  
