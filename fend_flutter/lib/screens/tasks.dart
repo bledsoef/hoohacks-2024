@@ -29,6 +29,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.task.networkImage);
     return Scaffold(
         appBar: AppBar(
           title: Text(widget.task.title),
