@@ -1,5 +1,5 @@
 // import 'package:fend_flutter/models/task.dart';
-// const kTitle = "APP NAME";
+const kTitle = "HEALTH BAR";
 
 // List gameNames = [ 
 //   "Call of Duty",
