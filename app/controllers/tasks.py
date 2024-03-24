@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.orm import Session
 from database.connection import get_db
-from app.logic.tasks import create_new_task
+from app.logic.tasks import create_new_task, get_tasks_for_user
 from app.models.models import Task, User
 from typing import Union
 router = APIRouter()
@@ -22,15 +22,14 @@ async def getSentRecsForUser(username: str = None, db: Session = Depends(get_db)
     try:        
         requestingUser = db.query(User).filter(User.username==username).first()
         assert requestingUser is not None
-        tasksForUser = [task.__dict__ for task in db.query(Task).filter(Task.user == username).all()]
-        return tasksForUser
+        completed, expired, assigned = get_tasks_for_user(db, username)
+        return {"completed": completed, "expired": expired, "assigned": assigned}
     except Exception as e:
         print(e)
         return {"message": "Failed to get recs"}
 
 
 @router.post("/updateTask")
-
 async def updateTask(task_id: Union[int, str], status: str = None, dateCompleted: str = None, taskDescription: str = None, rewardDescription: str = None, db: Session = Depends(get_db)):
     # updateableTaskAttributes = ['status', 'dateCompleted', 'taskDescription', 'rewardDescription']
     try:

@@ -17,3 +17,12 @@ def create_new_task(db: Session, request_data):
         db.commit()
     except Exception as e:
         print(e)
+
+def get_tasks_for_user(db: Session, username):
+    completed_query = db.query(Task).filter(Task.user==username, Task.status=="Completed").all()
+    completed_tasks = [task.__dict__ for task in completed_query]
+    assigned_query = db.query(Task).filter(Task.user==username, Task.status=="Assigned")
+    assigned_tasks = [task.__dict__ for task in assigned_query]
+    expired_query = db.query(Task).filter(Task.user==username, Task.status=="Assigned", Task.expirationDate and Task.expirationDate < datetime.now())
+    expired_tasks = [task.__dict__ for task in expired_query]
+    return completed_tasks, expired_tasks, assigned_tasks
