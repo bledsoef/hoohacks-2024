@@ -455,7 +455,6 @@ def refresh_skill(screen_str):
 	pygame.display.flip()
 
 def refresh_quest(screen_str):
-	# beanstodo: fill this with refresh content for the menu filled with quests
 	# The actual quests that are assigned
 	curr_quest = curr_item // 8
 	line_length = 20
@@ -811,8 +810,6 @@ def refresh_menu_buttons():
 	elif (cur_button == 5): quest_image = "quest_sel.png"  # Beans
 	elif (cur_button == 6): leave_image = "leave_sel.png" # Beans
 
-	#beans, need to address getting a quest_height
-
 	g.screen.blit(g.buttons[use_image], (base_x, base_y))
 	g.screen.blit(g.buttons[equip_image], (base_x, base_y+equip_height))
 	g.screen.blit(g.buttons[drop_image], (base_x, base_y+drop_height))
@@ -1059,7 +1056,6 @@ def skill_mouse_click(xy):
 	return tmp
 
 def quest_mouse_click(xy):
-	# beanstodo decouple this mouse movement with the little item cells that other menus use
 	tmp = inner_mouse_click(xy, "quest")
 	if tmp == 2:
 		tmp2 = usequest()
