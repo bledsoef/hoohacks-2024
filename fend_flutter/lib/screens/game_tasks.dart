@@ -14,7 +14,7 @@ class GameTasksScreen extends StatelessWidget{
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("GamesList"),
+        title: Text(gameName),
       ),
       body: GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -24,6 +24,7 @@ class GameTasksScreen extends StatelessWidget{
           for (final category in taskLists[gameName]!)
             TaskGridItems(
               task: category,
+              isExpired: gameName == "Expired" ? true : false,
             )
         ],
       ),

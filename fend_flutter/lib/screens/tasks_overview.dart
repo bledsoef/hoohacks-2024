@@ -1,6 +1,7 @@
 import 'package:fend_flutter/data/dummy_data.dart';
 import 'package:fend_flutter/screens/game_tasks.dart';
 import 'package:fend_flutter/widgets/game_task_set.dart';
+import 'package:fend_flutter/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -16,6 +17,7 @@ class _TasksOverviewState extends State<TasksOverview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MainDrawer(),
       appBar: AppBar(
         title: const Text(kTitle),
         leading: Builder(

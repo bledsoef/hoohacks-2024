@@ -1,6 +1,6 @@
 import 'package:fend_flutter/models/task.dart';
 
-const kTitle = "APP NAME";
+const kTitle = "HEALTH MANIA";
 
 List gameNames = [ 
   "Call of Duty",
@@ -11,7 +11,8 @@ List gameNames = [
 Map<String, List<Task>> taskLists = {
   "Super Smash Bros": smashBros,
   "Call of Duty": codTasks,
-  "DOTA": dota
+  "DOTA": dota,
+  "Expired": expiredList
 };
 
 const codTasks = [
@@ -211,7 +212,7 @@ const dota = [
     reward: '50 credit points',
     networkImage: "https://bnetcmsus-a.akamaihd.net/cms/blog_header/ti/TI4WAD6CJ4Y51691017340326.jpg",
     expirationDate: "24th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 50,
     metric: "miles",
@@ -225,7 +226,7 @@ const dota = [
     reward: '20 credit points',
     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXE7LUfmU4s3ooIuFUCjw0nlGBkOw61DNqnFZJJqys9g&s",
     expirationDate: "25th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 30,
     metric: "minutes",
@@ -239,7 +240,7 @@ const dota = [
     reward: '10 points',
     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbtDASBjQ4F7BJp-5k19S_-Ht8eWLZ0acAmQ&s",
     expirationDate: "24th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 10,
     metric: "pages",
@@ -253,7 +254,7 @@ const dota = [
     reward: 'Virtual temporary girlfriend/boyfriend',
     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTNWmjaNQddELp8jXIIaLINh4Icl_97gqbM7AalSPB9Q&s",
     expirationDate: "26th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 1,
     metric: "task",
@@ -267,7 +268,7 @@ const dota = [
     reward: "Pilot's suit",
     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoEyf6wfmdCXxmsU1dlC6Zgu7QS0LG75mT7w&s",
     expirationDate: "28th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 1,
     metric: "task",
@@ -281,11 +282,27 @@ const dota = [
     reward: "Nerdy glasses",
     networkImage: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFaVV4sOseOiCMxSt1gu1NrxQiZaPyUKGKISFEMu8mLg&s",
     expirationDate: "26th March",
-    status: false,
+    status: true,
     dateCompleted: "Not completed yet",
     quantity: 20,
     metric: "minutes",
     category: "Skill",
     progress: 14
   ),
+];
+
+var expiredList = [ 
+  dota[0],
+  smashBros[1],
+  smashBros[3],
+  dota[4],
+  smashBros[4],
+  dota[5],
+  codTasks[1],
+  smashBros[0],
+  dota[2],
+  smashBros[2],
+  codTasks[3],
+  smashBros[5],
+  smashBros[6],
 ];
