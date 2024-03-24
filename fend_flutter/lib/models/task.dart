@@ -12,7 +12,8 @@ class GameTask {
     required this.quantity, 
     required this.metric,
     required this.category,
-    required this.progress
+    this.progress = 0,
+    this.needsVerification = false
   });
 
   final String gameName;
@@ -27,5 +28,6 @@ class GameTask {
   final int quantity;
   final String metric;
   final String category;
-  final int progress;
+  final double progress;
+  final bool needsVerification;
 } 
