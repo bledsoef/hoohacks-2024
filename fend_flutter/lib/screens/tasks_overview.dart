@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fend_flutter/data/dummy_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:fend_flutter/widgets/game_task_set.dart';
 import 'package:fend_flutter/widgets/main_drawer.dart';
@@ -47,7 +48,7 @@ class _TasksOverviewState extends State<TasksOverview> {
     return Scaffold(
       drawer: MainDrawer(),
       appBar: AppBar(
-        title: const Text("APP NAME"),
+        title: const Text(kTitle),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
@@ -60,11 +61,11 @@ class _TasksOverviewState extends State<TasksOverview> {
       body: SingleChildScrollView(
         child: Container(
           decoration: const BoxDecoration(
-            color: Colors.black,
-            // image: DecorationImage(
-            //   image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWoXOj6dfCvRGhoatDxpGlIRPBb9k5Dr35z9dgRaiQ_g&s"),
-            //   fit: BoxFit.cover,
-            // ),
+            // color: Colors.black,
+            image: DecorationImage(
+              image: AssetImage("assets/pexels-ivan-samkov-6648586.jpg"),
+              fit: BoxFit.cover,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

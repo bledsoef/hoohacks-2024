@@ -31,7 +31,7 @@ class MainDrawer extends StatelessWidget {
                   width: 16.0,
                 ),
                 Text(
-                  "APP NAME",
+                  kTitle,
                   style: Theme.of(context)
                       .textTheme
                       .titleLarge!

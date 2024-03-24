@@ -29,12 +29,12 @@ class GameTaskSets extends StatelessWidget {
             TextButton(
                 onPressed: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          GameTasksScreen(gameName: gameName, gameData: gameData)));
+                      builder: (context) => GameTasksScreen(
+                          gameName: gameName, gameData: gameData)));
                 },
                 child: Text(
                   "View all",
-                  style: TextStyle(color: Colors.pink[300]),
+                  style: TextStyle(color: Colors.orangeAccent[100]),
                 ))
           ],
         ),
@@ -46,47 +46,52 @@ class GameTaskSets extends StatelessWidget {
             itemBuilder: (context, index) {
               Map<String, dynamic> task = assignedTasks[index];
               return SizedBox(
-                width: MediaQuery.of(context).size.width /
-                    3, // Card width
+                width: MediaQuery.of(context).size.width / 2.5, // Card width
                 child: Card(
-                  color: Colors.pink[200],
+                  color: Colors.orange[400],
                   margin: const EdgeInsets.all(8.0),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
-                        Text(
-                          "Task",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                          ),
+                        Column(
+                          children: [
+                            Text(
+                              "Task",
+                              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                color: Colors.white
+                              ),
+                            ),
+                            Text(
+                              task["taskDescription"],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          task["taskDescription"],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          "Reward",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
-                        Text(
-                          task["rewardDescription"],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                        Column(
+                          children: [
+                            const Text(
+                              "Reward",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            Text(
+                              task["rewardDescription"],
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
