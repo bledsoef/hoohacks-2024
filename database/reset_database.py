@@ -2,16 +2,20 @@ from database.connection import Base, engine
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
 from app.models.models import Task, User
+from app.logic.tasks import get_fitbit_information
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
+curr_steps = get_fitbit_information()["steps"]
+
 with Session(engine) as session:
+
     finn = User(username="bledsoef", firstName="finn", lastName="bledsoe", email="bledsoef@berea.edu")
     lawrence = User(username="hoerstl", firstName="lawrence", lastName="hoerst", email="hoerstl@berea.edu")
 
     test_task1 = Task(user="bledsoef", title="World Traveler", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(hours=1), quantity=10000, metric="steps", category="health", taskDescription="Submit a picture of an Apple.", rewardDescription="10 gold.", rewardMetric='gold', rewardQuantity=10)
     test_task3 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now(), quantity=5000, metric="steps", category="health", taskDescription="Walk 5001 steps!", rewardDescription="gain 1 attack.", rewardMetric='attack', rewardQuantity=1)
-    test_task4 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=datetime.now(), expirationDate=datetime.now() - timedelta(days=1), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 gold.", rewardMetric='gold', rewardQuantity=5)
+    test_task4 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(days=1), quantity=curr_steps+5, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 gold.", rewardMetric='gold', rewardQuantity=5)
     # test_task1 = Task(user="bledsoef", title="World Traveler", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now() + timedelta(hours=1), quantity=10000, metric="steps", category="health", taskDescription="Submit a picture of an Apple.", rewardDescription="10 coins.", networkImage = "https://play-lh.googleusercontent.com/HrwlEHggqXCN6k3ArjfeGUDcz3QZYwgu3MgwTvnry4s--pCDOb6GPzNpjD248y3XYw=w526-h296-rw")
     # test_task2 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Completed", dateCompleted=datetime.now(), expirationDate=datetime.now(), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins.", networkImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRej2kFTt1qTvbblArHkpzM-iuFGm7fxsDIY9oo4OzLYw&s")
     # test_task3 = Task(user="bledsoef", title="Across the country", gameTitle="Dragon Hunt", status="Assigned", dateCompleted=None, expirationDate=datetime(2024, 3, 27), quantity=5000, metric="steps", category="health", taskDescription="Walk 5000 steps!", rewardDescription="5 coins.", networkImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU_vEI9XaUngPRGJC0Yqr-3Z7gjqIsoWPhkAn1exqJTA&s")
