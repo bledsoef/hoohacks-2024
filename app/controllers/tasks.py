@@ -10,6 +10,7 @@ import requests
 import os
 from pathlib import Path
 import dotenv
+import time
 
 env_path = Path('.') / '.env'
 dotenv.load_dotenv()
@@ -82,12 +83,11 @@ async def redeemTask(task_id: Union[int, str], db: Session = Depends(get_db)):
 @router.post("/validateTask")
 async def validateTask(request: Request, db: Session = Depends(get_db)):
     data = await request.json()
-    print(data)
     taskToVerify = db.query(Task).filter(Task.id == data["task_id"]).first()
     if not taskToVerify:
         return "Invalid task"
-    
-    verificationStatus = moderate_task(data["file_location"], taskToVerify.taskDescription)
+    print(taskToVerify.taskDescription)
+    verificationStatus = moderate_task("apple.png", taskToVerify.taskDescription)
     if verificationStatus == "YES":
         taskToVerify.status = "Completed"
     elif verificationStatus == "NO":
